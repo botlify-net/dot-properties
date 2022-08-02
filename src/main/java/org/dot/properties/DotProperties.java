@@ -69,11 +69,11 @@ public class DotProperties {
     }
 
     public DotProperties load() throws NoJavaEnvFoundException, IOException, PropertiesAreMissingException {
-        String javaEnv = System.getenv("JAVA_ENV");
+        String javaEnv = System.getenv("JAVA_PROP");
         if (javaEnv == null || javaEnv.isEmpty())
             throw new NoJavaEnvFoundException();
         String fileName = ".properties." + javaEnv;
-        if (refresh) startTaskRefresh();
+        startTaskRefresh();
         return (load(fileName));
     }
 
@@ -104,6 +104,7 @@ public class DotProperties {
 
     // create a repeat task
     private void startTaskRefresh() {
+        if (!refresh) return;
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {

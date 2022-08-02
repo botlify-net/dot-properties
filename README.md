@@ -7,10 +7,4 @@ This module help you to create, refresh properties file.
 
 # Basic usage
 
-Set the 
-
-
-# Question
-
-## Why we choose to name the properties file as `.properties` ?
-
+Set the
