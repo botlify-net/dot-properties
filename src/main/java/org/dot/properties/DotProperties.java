@@ -18,6 +18,7 @@ public class DotProperties {
     private Boolean refresh = false;
     private final ArrayList<String> requires = new ArrayList<>();
     private String fileName = null;
+    private final Timer timer = new Timer();
 
     /*
      $      Constructors
@@ -72,6 +73,7 @@ public class DotProperties {
         if (javaEnv == null || javaEnv.isEmpty())
             throw new NoJavaEnvFoundException();
         String fileName = ".properties." + javaEnv;
+        if (refresh) startTaskRefresh();
         return (load(fileName));
     }
 
@@ -102,18 +104,28 @@ public class DotProperties {
 
     // create a repeat task
     private void startTaskRefresh() {
-        Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
                 try {
                     refreshProperties();
+                    logger.trace("Properties was refreshed (file: " + fileName + ")");
                 } catch (IOException | PropertiesAreMissingException e) {
                     logger.error(e.getMessage(), e);
                 }
             }
         };
         timer.scheduleAtFixedRate(timerTask, 0, duration.toMillis());
+    }
+
+    public void setRefreshDuration(Duration duration) {
+        cancelRefresh();
+        this.duration = duration;
+        startTaskRefresh();
+    }
+
+    public void cancelRefresh() {
+        this.timer.cancel();
     }
 
     /*
