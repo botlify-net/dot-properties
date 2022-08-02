@@ -165,17 +165,17 @@ public class DotProperties {
             return (this);
         }
 
-        public DotProperties load(String fileName) throws NoJavaEnvFoundException, IOException, PropertiesAreMissingException {
+        public DotProperties build(String fileName) throws NoJavaEnvFoundException, IOException, PropertiesAreMissingException {
             this.fileName = fileName;
             return (new DotProperties(this));
         }
 
-        public DotProperties load() throws NoJavaEnvFoundException, IOException, PropertiesAreMissingException {
+        public DotProperties build() throws NoJavaEnvFoundException, IOException, PropertiesAreMissingException {
             String javaEnv = System.getenv(this.javaEnv);
             if (javaEnv == null || javaEnv.isEmpty())
                 throw (new NoJavaEnvFoundException());
             String fileName = ".properties." + javaEnv;
-            return (load(fileName));
+            return (build(fileName));
         }
 
     }
