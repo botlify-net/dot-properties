@@ -79,6 +79,18 @@ public class DotProperties {
     }
 
     /*
+     $      Events
+     */
+
+    public static void registerListener(DotPropertiesListener listener) {
+        DotPropertiesEvent.addListener(listener);
+    }
+
+    public static void unregisterListener(DotPropertiesListener listener) {
+        DotPropertiesEvent.removeListener(listener);
+    }
+
+    /*
      $      Getters and setters
      */
 

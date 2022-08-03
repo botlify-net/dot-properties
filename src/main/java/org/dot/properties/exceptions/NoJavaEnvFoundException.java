@@ -1,5 +1,7 @@
 package org.dot.properties.exceptions;
 
+import org.dot.properties.DotProperties;
+
 public class NoJavaEnvFoundException extends Exception {
 
     public NoJavaEnvFoundException() {

@@ -15,7 +15,8 @@ public class DotPropertiesTest {
         DotProperties dotProperties = new DotProperties.Builder()
                 .requires("propertyOne", "propertyTwo")
                 .refresh(1)
-                .load(".properties.test");
+                .build(".properties.test");
+
         for (String property : dotProperties.getRequires())
             assertNotNull(System.getProperty(property));
         Thread.sleep(30000);
