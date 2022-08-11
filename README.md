@@ -5,6 +5,13 @@ We need to use the properties file.
 
 This module help you to manage your properties in your project.
 
+## How to install ?
+
+You need to clone the repository and execute the following command:
+````bash
+mvn install
+````
+
 ## Basic usage
 
 Before everything you should configure the **JAVA_PROPS** environment variables.
