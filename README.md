@@ -29,7 +29,7 @@ _When a file is found, the properties are load and the others files are ignored.
 
 Example:
 ```
-    DotProperties dotProperties = new DotProperties.Builder().build();
+DotProperties dotProperties = new DotProperties.Builder().build();
 ```
 
 ## Custom properties file
