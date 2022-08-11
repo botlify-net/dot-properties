@@ -30,7 +30,7 @@ In the following case the DotProperties will try to load properties file in the 
 _When a file is found, the properties are load and the others files are ignored._
 
 Example:
-```
+```java
 DotProperties dotProperties = new DotProperties.Builder().build();
 ```
 
