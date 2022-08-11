@@ -20,7 +20,7 @@ public class DotProperties {
 
     private final Builder builder;
 
-    private DotProperties(Builder builder) throws PropertiesAreMissingException, IOException {
+    private DotProperties(Builder builder) throws PropertiesAreMissingException, IOException, NoJavaEnvFoundException {
         this.builder = builder;
         refreshProperties();
         if (builder.refresh) startTaskRefresh();
@@ -32,9 +32,8 @@ public class DotProperties {
      $      Private methods
      */
 
-    private void refreshProperties() throws IOException, PropertiesAreMissingException {
-        Properties properties = new Properties();
-        properties.load(new FileInputStream(builder.fileName));
+    private void refreshProperties() throws IOException, PropertiesAreMissingException, NoJavaEnvFoundException {
+        Properties properties = (builder.fileName != null) ? FileUtils.readProperties(builder.fileName, builder.inResource) : FileUtils.readProperties(builder.javaEnv);
         checkIfAllPropertiesExist(properties);
         for (String property : properties.stringPropertyNames()) {
             String value = properties.getProperty(property);
@@ -55,14 +54,14 @@ public class DotProperties {
 
     // create a repeat task
     private void startTaskRefresh() {
-        if (builder.refresh == false) return;
+        if (!builder.refresh) return;
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
                 try {
                     refreshProperties();
                     logger.trace("Properties was refreshed (file: " + builder.fileName + ")");
-                } catch (IOException | PropertiesAreMissingException e) {
+                } catch (IOException | PropertiesAreMissingException | NoJavaEnvFoundException e) {
                     logger.error(e.getMessage(), e);
                 }
             }
@@ -128,6 +127,7 @@ public class DotProperties {
 
         private String javaEnv = "JAVA_PROPS";
         private String fileName = null;
+        private boolean inResource = false;
         private Duration duration = Duration.ofSeconds(30);
         private boolean refresh = false;
         private final ArrayList<String> requires = new ArrayList<>();
@@ -137,7 +137,7 @@ public class DotProperties {
             // Nothing to do
         }
 
-        public Builder withJavaEnv(String javaEnv) {
+        public Builder setJavaEnv(String javaEnv) {
             this.javaEnv = javaEnv;
             return (this);
         }
@@ -177,17 +177,19 @@ public class DotProperties {
             return (this);
         }
 
-        public DotProperties build(String fileName) throws NoJavaEnvFoundException, IOException, PropertiesAreMissingException {
-            this.fileName = fileName;
-            return (new DotProperties(this));
+        public Builder setFile(String path) {
+            this.fileName = path;
+            return (this);
         }
 
-        public DotProperties build() throws NoJavaEnvFoundException, IOException, PropertiesAreMissingException {
-            String javaEnv = System.getenv(this.javaEnv);
-            if (javaEnv == null || javaEnv.isEmpty())
-                throw (new NoJavaEnvFoundException());
-            String fileName = ".properties." + javaEnv;
-            return (build(fileName));
+        public Builder setResourceFile(String path) {
+            this.inResource = true;
+            this.fileName = path;
+            return (this);
+        }
+
+        public DotProperties build() throws IOException, PropertiesAreMissingException, NoJavaEnvFoundException {
+            return (new DotProperties(this));
         }
 
     }

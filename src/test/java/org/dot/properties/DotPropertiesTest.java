@@ -11,17 +11,22 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class DotPropertiesTest {
 
     @Test
-    public void testDotProperties() throws InterruptedException, NoJavaEnvFoundException, PropertiesAreMissingException, IOException {
+    public void testDotProperties() throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException {
         DotProperties dotProperties = new DotProperties.Builder()
                 .requires("propertyOne", "propertyTwo")
-                .refresh(1)
-                .build(".properties.test");
+                .setFile(".properties.test")
+                .build();
 
         for (String property : dotProperties.getRequires())
             assertNotNull(System.getProperty(property));
-        Thread.sleep(30000);
     }
 
-
+    @Test
+    public void testDotPropertiesNoFile() throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException {
+        DotProperties dotProperties = new DotProperties.Builder()
+                .requires("propertyOne", "propertyTwo")
+                .setResourceFile(".properties.notexist")
+                .build();
+    }
 
 }
