@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class DotPropertiesTest {
 
@@ -14,7 +15,8 @@ public class DotPropertiesTest {
     public void testDotProperties() throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException {
         DotProperties dotProperties = new DotProperties.Builder()
                 .requires("propertyOne", "propertyTwo")
-                .setFile(".properties.test")
+                .setPath(".properties.test")
+                .refresh()
                 .build();
 
         for (String property : dotProperties.getRequires())
@@ -23,10 +25,15 @@ public class DotPropertiesTest {
 
     @Test
     public void testDotPropertiesNoFile() throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException {
-        DotProperties dotProperties = new DotProperties.Builder()
-                .requires("propertyOne", "propertyTwo")
-                .setResourceFile(".properties.notexist")
-                .build();
+        try {
+            DotProperties dotProperties = new DotProperties.Builder()
+                    .requires("propertyOne", "propertyTwo")
+                    .setResourcePath(".properties.notexist")
+                    .build();
+            assertNotNull(null);
+        } catch (IOException e) {
+            assertNotNull(e);
+        }
     }
 
 }

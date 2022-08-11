@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import org.dot.properties.exceptions.NoJavaEnvFoundException;
 import org.dot.properties.exceptions.PropertiesAreMissingException;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.*;
@@ -142,10 +141,6 @@ public class DotProperties {
             return (this);
         }
 
-        public Builder require(String property) {
-            return (requires(Collections.singletonList(property)));
-        }
-
         public Builder requires(List<String> properties) {
             if (properties == null) return (this);
             return (requires(properties.toArray(new String[0])));
@@ -177,12 +172,13 @@ public class DotProperties {
             return (this);
         }
 
-        public Builder setFile(String path) {
+        public Builder setPath(String path) {
+            this.inResource = false;
             this.fileName = path;
             return (this);
         }
 
-        public Builder setResourceFile(String path) {
+        public Builder setResourcePath(String path) {
             this.inResource = true;
             this.fileName = path;
             return (this);
