@@ -12,6 +12,8 @@ You need to clone the repository and execute the following command:
 mvn install
 ````
 
+You should have Maven installed. If not you can have the instructions to install it here: https://maven.apache.org/install.html
+
 ## Basic usage
 
 Before everything you should configure the **JAVA_PROPS** environment variables.
