@@ -102,6 +102,33 @@ DotProperties dotProperties = new DotProperties.Builder()
         .build();
 ````
 
+### Events
+
+You can subscribe to the following events:
+````java
+/**
+ * This function is called when the properties are refreshed and a value was updated.
+ */
+void onPropertyChanged(String propertiesName, String oldValue, String newValue);
+````
+Example:
+
+````java
+
+import org.dot.properties.DotPropertiesListener;
+
+public class MainClass implements DotPropertiesListener {
+    
+    @Override
+    public void onPropertyChanged(String propertiesName, String oldValue, String newValue) {
+        // Do whatever you want
+    }
+    
+}
+
+````
+
+
 ## Need more option ?
 
 If you need more options not developed in this module you can open a issue.

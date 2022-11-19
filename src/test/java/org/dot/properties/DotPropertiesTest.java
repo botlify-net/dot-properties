@@ -6,10 +6,11 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class DotPropertiesTest {
+public class DotPropertiesTest implements DotPropertiesListener {
+
+    private static boolean eventCalled = false;
 
     @Test
     public void testDotProperties() throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException {
@@ -34,6 +35,21 @@ public class DotPropertiesTest {
         } catch (IOException e) {
             assertNotNull(e);
         }
+    }
+
+    @Test
+    public void testPropertiesEvents() {
+        DotProperties.registerListener(this);
+        DotPropertiesEvent.togglePropertyChanged("propertiesName", "oldValue", "newValue");
+        assertTrue(eventCalled);
+    }
+
+    @Override
+    public void onPropertyChanged(String propertiesName, String oldValue, String newValue) {
+        assertEquals("propertiesName", propertiesName);
+        assertEquals("oldValue", oldValue);
+        assertEquals("newValue", newValue);
+        eventCalled = true;
     }
 
 }

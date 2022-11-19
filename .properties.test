@@ -1,2 +1,2 @@
-propertyOne="foo"
-propertyTwo="bar"
+propertyOne=new value
+propertyTwo=bar

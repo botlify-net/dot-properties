@@ -4,8 +4,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dot.properties.exceptions.NoJavaEnvFoundException;
 import org.dot.properties.exceptions.PropertiesAreMissingException;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
+import java.io.*;
 import java.time.Duration;
 import java.util.*;
 
@@ -35,8 +36,11 @@ public class DotProperties {
         Properties properties = (builder.fileName != null) ? FileUtils.readProperties(builder.fileName, builder.inResource) : FileUtils.readProperties(builder.javaEnv);
         checkIfAllPropertiesExist(properties);
         for (String property : properties.stringPropertyNames()) {
+            String oldValue = System.getProperty(property);
             String value = properties.getProperty(property);
             System.setProperty(property, value);
+            if (oldValue != null && !oldValue.equals(value))
+                DotPropertiesEvent.togglePropertyChanged(property, oldValue, value);
         }
     }
 
@@ -59,7 +63,7 @@ public class DotProperties {
             public void run() {
                 try {
                     refreshProperties();
-                    logger.trace("Properties was refreshed (file: " + builder.fileName + ")");
+                    logger.trace("Properties was refreshed, next in " + builder.duration.toSeconds() + " seconds");
                 } catch (IOException | PropertiesAreMissingException | NoJavaEnvFoundException e) {
                     logger.error(e.getMessage(), e);
                 }
@@ -77,6 +81,19 @@ public class DotProperties {
     }
 
     /*
+     $      Update
+     */
+
+    public boolean setProperty(String property, String value) throws IOException {
+        String oldValue = System.getProperty(property);
+        if (oldValue == null || oldValue.equals(value)) return false;
+        System.setProperty(property, value);
+        changePropertyInFile(builder.fileName, property, value);
+        DotPropertiesEvent.togglePropertyChanged(property, oldValue, value);
+        return true;
+    }
+
+    /*
      $      Events
      */
 
@@ -89,6 +106,33 @@ public class DotProperties {
     }
 
     /*
+     $      Private methods
+     */
+
+    public static void changePropertyInFile(@NotNull final String filename,
+                                            @NotNull final String key,
+                                            @NotNull final String value) throws IOException {
+        final File tmpFile = new File(filename + ".tmp");
+        final File file = new File(filename);
+        PrintWriter pw = new PrintWriter(tmpFile);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        boolean found = false;
+        final String toAdd = key + '=' + value;
+        for (String line; (line = br.readLine()) != null; ) {
+            if (line.startsWith(key + '=')) {
+                line = toAdd;
+                found = true;
+            }
+            pw.println(line);
+        }
+        if (!found)
+            pw.println(toAdd);
+        br.close();
+        pw.close();
+        tmpFile.renameTo(file);
+    }
+    
+    /*
      $      Getters and setters
      */
 
@@ -97,16 +141,8 @@ public class DotProperties {
         return (builder.javaEnv);
     }
 
-    public String getFileName() {
-        return (builder.fileName);
-    }
-
     public Duration getDuration() {
         return (builder.duration);
-    }
-
-    public Timer getTimer() {
-        return (builder.timer);
     }
 
     public List<String> getRequires() {
@@ -116,7 +152,6 @@ public class DotProperties {
     public Boolean isRefresh() {
         return (builder.refresh);
     }
-
 
     /*
      $      Builder
