@@ -1,10 +1,11 @@
-package org.dot.properties;
+package org.dot.properties.events;
 
 import java.util.ArrayList;
+import java.util.List;
 
-class DotPropertiesEvent {
+public class DotPropertiesEvent {
 
-    private static final ArrayList<DotPropertiesListener> properties = new ArrayList<DotPropertiesListener>();
+    private static final List<DotPropertiesListener> properties = new ArrayList<DotPropertiesListener>();
 
     /*
      $      Register a listener for the events.

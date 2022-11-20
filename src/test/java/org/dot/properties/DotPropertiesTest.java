@@ -1,5 +1,7 @@
 package org.dot.properties;
 
+import org.dot.properties.events.DotPropertiesEvent;
+import org.dot.properties.events.DotPropertiesListener;
 import org.dot.properties.exceptions.NoJavaEnvFoundException;
 import org.dot.properties.exceptions.PropertiesAreMissingException;
 import org.junit.jupiter.api.Test;
@@ -20,8 +22,8 @@ public class DotPropertiesTest implements DotPropertiesListener {
                 .refresh()
                 .build();
 
-        for (String property : dotProperties.getRequires())
-            assertNotNull(System.getProperty(property));
+        for (PropertiesFormat property : dotProperties.getRequires())
+            assertNotNull(System.getProperty(property.getName()));
     }
 
     @Test

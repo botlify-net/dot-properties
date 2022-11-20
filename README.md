@@ -115,15 +115,15 @@ Example:
 
 ````java
 
-import org.dot.properties.DotPropertiesListener;
+import org.dot.properties.events.DotPropertiesListener;
 
 public class MainClass implements DotPropertiesListener {
-    
+
     @Override
     public void onPropertyChanged(String propertiesName, String oldValue, String newValue) {
         // Do whatever you want
     }
-    
+
 }
 
 ````

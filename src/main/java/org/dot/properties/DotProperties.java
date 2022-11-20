@@ -2,9 +2,13 @@ package org.dot.properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dot.properties.events.DotPropertiesEvent;
+import org.dot.properties.events.DotPropertiesListener;
 import org.dot.properties.exceptions.NoJavaEnvFoundException;
 import org.dot.properties.exceptions.PropertiesAreMissingException;
+import org.dot.properties.exceptions.PropertiesBadFormat;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.time.Duration;
@@ -32,9 +36,10 @@ public class DotProperties {
      $      Private methods
      */
 
-    private void refreshProperties() throws IOException, PropertiesAreMissingException, NoJavaEnvFoundException {
+    private void refreshProperties() throws IOException, NoJavaEnvFoundException {
         Properties properties = (builder.fileName != null) ? FileUtils.readProperties(builder.fileName, builder.inResource) : FileUtils.readProperties(builder.javaEnv);
         checkIfAllPropertiesExist(properties);
+        checkAllFormats(properties);
         for (String property : properties.stringPropertyNames()) {
             String oldValue = System.getProperty(property);
             String value = properties.getProperty(property);
@@ -44,15 +49,27 @@ public class DotProperties {
         }
     }
 
-    private void checkIfAllPropertiesExist(Properties properties) throws PropertiesAreMissingException {
+    private void checkIfAllPropertiesExist(Properties properties) {
         if (builder.requires.isEmpty()) return;
         List<String> notSetProperties = new ArrayList<>();
-        for (String property : builder.requires) {
-            String value = properties.getProperty(property);
-            if (value == null || value.isEmpty()) notSetProperties.add(property);
+        for (PropertiesFormat propertyFormat : builder.requires) {
+            String value = properties.getProperty(propertyFormat.getName());
+            if (value == null || value.isEmpty()) notSetProperties.add(propertyFormat.getName());
         }
         if (!notSetProperties.isEmpty())
-            throw new PropertiesAreMissingException(notSetProperties);
+            throw new RuntimeException(new PropertiesAreMissingException(notSetProperties));
+    }
+
+    private void checkAllFormats(Properties properties) {
+        List<PropertiesFormat> propertiesFormats = new ArrayList<>();
+        for (PropertiesFormat propertyFormat : builder.requires) {
+            String value = properties.getProperty(propertyFormat.getName());
+            if (value == null || value.isEmpty()) continue;
+            if (!propertyFormat.verifyFormat(value))
+                propertiesFormats.add(propertyFormat);
+        }
+        if (!propertiesFormats.isEmpty())
+            throw (new RuntimeException(new PropertiesBadFormat(propertiesFormats)));
     }
 
     // create a repeat task
@@ -64,7 +81,7 @@ public class DotProperties {
                 try {
                     refreshProperties();
                     logger.trace("Properties was refreshed, next in " + builder.duration.toSeconds() + " seconds");
-                } catch (IOException | PropertiesAreMissingException | NoJavaEnvFoundException e) {
+                } catch (Exception e) {
                     logger.error(e.getMessage(), e);
                 }
             }
@@ -76,19 +93,25 @@ public class DotProperties {
      $      Binding
      */
 
-    public String getProperty(String property) {
+    public @Nullable String getProperty(@NotNull final String property) {
         return System.getProperty(property);
+    }
+
+    public @NotNull String getProperty(@NotNull final String property,
+                                       @NotNull final String defaultValue) {
+        return System.getProperty(property, defaultValue);
     }
 
     /*
      $      Update
      */
 
-    public boolean setProperty(String property, String value) throws IOException {
+    public boolean setProperty(@NotNull final String property,
+                               @NotNull final String value) throws IOException {
         String oldValue = System.getProperty(property);
         if (oldValue == null || oldValue.equals(value)) return false;
         System.setProperty(property, value);
-        changePropertyInFile(builder.fileName, property, value);
+        FileUtils.changePropertyInFile(builder.fileName, property, value);
         DotPropertiesEvent.togglePropertyChanged(property, oldValue, value);
         return true;
     }
@@ -97,39 +120,12 @@ public class DotProperties {
      $      Events
      */
 
-    public static void registerListener(DotPropertiesListener listener) {
+    public static void registerListener(@NotNull final DotPropertiesListener listener) {
         DotPropertiesEvent.addListener(listener);
     }
 
-    public static void unregisterListener(DotPropertiesListener listener) {
+    public static void unregisterListener(@NotNull final DotPropertiesListener listener) {
         DotPropertiesEvent.removeListener(listener);
-    }
-
-    /*
-     $      Private methods
-     */
-
-    public static void changePropertyInFile(@NotNull final String filename,
-                                            @NotNull final String key,
-                                            @NotNull final String value) throws IOException {
-        final File tmpFile = new File(filename + ".tmp");
-        final File file = new File(filename);
-        PrintWriter pw = new PrintWriter(tmpFile);
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        boolean found = false;
-        final String toAdd = key + '=' + value;
-        for (String line; (line = br.readLine()) != null; ) {
-            if (line.startsWith(key + '=')) {
-                line = toAdd;
-                found = true;
-            }
-            pw.println(line);
-        }
-        if (!found)
-            pw.println(toAdd);
-        br.close();
-        pw.close();
-        tmpFile.renameTo(file);
     }
     
     /*
@@ -145,7 +141,7 @@ public class DotProperties {
         return (builder.duration);
     }
 
-    public List<String> getRequires() {
+    public List<PropertiesFormat> getRequires() {
         return (builder.requires);
     }
 
@@ -164,7 +160,7 @@ public class DotProperties {
         private boolean inResource = false;
         private Duration duration = Duration.ofSeconds(30);
         private boolean refresh = false;
-        private final ArrayList<String> requires = new ArrayList<>();
+        private final List<PropertiesFormat> requires = new ArrayList<>();
         private final Timer timer = new Timer();
 
         public Builder() {
@@ -184,6 +180,15 @@ public class DotProperties {
         public Builder requires(String... properties) {
             if (properties == null) return (this);
             for (String str : properties) {
+                if (!this.requires.contains(new PropertiesFormat(str)))
+                    this.requires.add(new PropertiesFormat(str));
+            }
+            return (this);
+        }
+
+        public Builder requires(PropertiesFormat... properties) {
+            if (properties == null) return (this);
+            for (PropertiesFormat str : properties) {
                 if (!this.requires.contains(str))
                     this.requires.add(str);
             }

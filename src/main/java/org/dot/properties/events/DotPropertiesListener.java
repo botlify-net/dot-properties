@@ -1,4 +1,4 @@
-package org.dot.properties;
+package org.dot.properties.events;
 
 public interface DotPropertiesListener {
 
