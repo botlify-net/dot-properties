@@ -4,6 +4,7 @@ import org.dot.properties.events.DotPropertiesEvent;
 import org.dot.properties.events.DotPropertiesListener;
 import org.dot.properties.exceptions.NoJavaEnvFoundException;
 import org.dot.properties.exceptions.PropertiesAreMissingException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -28,6 +29,7 @@ public class DotPropertiesTest implements DotPropertiesListener {
 
     @Test
     public void testDotPropertiesNoFile() throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException {
+        Assertions.fail();
         try {
             DotProperties dotProperties = new DotProperties.Builder()
                     .requires("propertyOne", "propertyTwo")
