@@ -7,6 +7,17 @@
     <groupId>org.dot-properties</groupId>
     <artifactId>dot-properties</artifactId>
     <version>1.0</version>
+    <packaging>pom</packaging>
+    <url>https://github.com/florianepitech/dot-properties</url>
+    <description>Manage your properties file like a pro</description>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/florianepitech/dot-properties</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
