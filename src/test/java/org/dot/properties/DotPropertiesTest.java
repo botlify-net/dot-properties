@@ -29,7 +29,6 @@ public class DotPropertiesTest implements DotPropertiesListener {
 
     @Test
     public void testDotPropertiesNoFile() throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException {
-        Assertions.fail();
         try {
             DotProperties dotProperties = new DotProperties.Builder()
                     .requires("propertyOne", "propertyTwo")
