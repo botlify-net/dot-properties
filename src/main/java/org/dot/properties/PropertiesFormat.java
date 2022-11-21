@@ -15,6 +15,7 @@ public class PropertiesFormat {
         DATE("^(\\d{1,2})/(\\d{1,2})/(\\d{4})$"),
         DATETIME("^(\\d{1,2})/(\\d{1,2})/(\\d{4}) (\\d{1,2}):(\\d{1,2})$"),
         BOOLEAN("^(true|false)$"),
+        URL("^(http|https)://.*$"),
         INTEGER("^(\\d+)$"),
         DOUBLE("^(\\d+\\.\\d+)$"),
         FLOAT("^(\\d+\\.\\d+)$"),
