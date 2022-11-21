@@ -17,6 +17,7 @@ public class PropertiesFormat {
         BOOLEAN("^(true|false)$"),
         INTEGER("^(\\d+)$"),
         DOUBLE("^(\\d+\\.\\d+)$"),
+        FLOAT("^(\\d+\\.\\d+)$"),
         STRING("^(.+)$"),
         LOCALTIME("^(\\d{1,2}):(\\d{1,2})$"),
         MONGO_URL("^(mongodb://)(\\w+):(\\w+)@([\\w.]+):(\\d+)/(\\w+)$"),
