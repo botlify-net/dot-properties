@@ -34,7 +34,7 @@ public class DotPropertiesTest implements DotPropertiesListener {
                     .requires("propertyOne", "propertyTwo")
                     .setResourcePath(".properties.notexist")
                     .build();
-            assertNotNull(null);
+            assertNotNull(dotProperties);
         } catch (IOException e) {
             assertNotNull(e);
         }
