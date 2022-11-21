@@ -1,6 +1,6 @@
 name: Maven deployments
 
-on: [push]
+on: [release]
 
 jobs:
   build:
