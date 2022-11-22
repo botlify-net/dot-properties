@@ -1,5 +1,6 @@
 package net.dot.properties.enums;
 
+import net.dot.properties.PropertiesFormat;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.ElementType;
@@ -14,6 +15,8 @@ public @interface PropertiesElement {
     @NotNull String name();
 
     @NotNull String[] regex() default {};
+
+    @NotNull PropertiesFormat.Default[] format() default {};
 
     boolean required() default false;
 

@@ -16,6 +16,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.time.Duration;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -72,6 +74,8 @@ public class DotProperties {
             PropertiesFormat propertiesFormat = new PropertiesFormat(propElem.name());
             if (propElem.regex().length != 0)
                 propertiesFormat.setPattern(Pattern.compile(propElem.regex()[0]));
+            if (propElem.format().length != 0)
+                propertiesFormat.setPattern(Pattern.compile(propElem.format()[0].getRegex()));
             if (getRequires().contains(propertiesFormat)) {
                 logger.warn("Property {} already exists in requires list", propertiesFormat.getName());
                 continue;
@@ -96,10 +100,54 @@ public class DotProperties {
                     continue;
                 }
                 field.setAccessible(true);
-                field.set(builder.bean, value);
-            } catch (IllegalAccessException e) {
+                updateField(field, value);
+            } catch (Exception e) {
                 logger.error("Error while updating bean field: {}", e.getMessage());
             }
+        }
+    }
+
+    private void updateField(@NotNull Field field, @NotNull String value) throws IllegalAccessException {
+        if (Long.TYPE.equals(field.getType())) {
+            field.setLong(builder.bean, Long.parseLong(value));
+        } else if (Integer.TYPE.equals(field.getType())) {
+            field.setInt(builder.bean, Integer.parseInt(value));
+        } else if (Short.TYPE.equals(field.getType())) {
+            field.setShort(builder.bean, Short.parseShort(value));
+        } else if (Byte.TYPE.equals(field.getType())) {
+            field.setByte(builder.bean, Byte.parseByte(value));
+        } else if (Double.TYPE.equals(field.getType())) {
+            field.setDouble(builder.bean, Double.parseDouble(value));
+        } else if (Float.TYPE.equals(field.getType())) {
+            field.setFloat(builder.bean, Float.parseFloat(value));
+        } else if (Boolean.TYPE.equals(field.getType())) {
+            field.setBoolean(builder.bean, Boolean.parseBoolean(value));
+        } else if (Character.TYPE.equals(field.getType())) {
+            field.setChar(builder.bean, value.charAt(0));
+        } else if (Date.class.equals(field.getType())) {
+            field.set(builder.bean, new Date(Long.parseLong(value)));
+        } else if (Duration.class.equals(field.getType())) {
+            field.set(builder.bean, Duration.ofMillis(Long.parseLong(value)));
+        } else if (Instant.class.equals(field.getType())) {
+            field.set(builder.bean, Instant.ofEpochMilli(Long.parseLong(value)));
+        } else if (String.class.equals(field.getType())) {
+            field.set(builder.bean, value);
+        } else if (File.class.equals(field.getType())) {
+            field.set(builder.bean, new File(value));
+        } else if (Pattern.class.equals(field.getType())) {
+            field.set(builder.bean, Pattern.compile(value));
+        } else if (ZonedDateTime.class.equals(field.getType())) {
+            field.set(builder.bean, ZonedDateTime.parse(value));
+        } else if (field.getType().isEnum()) {
+            Enum[] enumConstants = (Enum[]) field.getType().getEnumConstants();
+            Enum result = Arrays.stream(enumConstants).filter(e -> e.name().equals(value)).findFirst().orElse(null);
+            if (result == null) {
+                logger.warn("Enum constant {} not found in {}", value, field.getType().getName());
+                return;
+            }
+            field.set(builder.bean, result);
+        } else {
+            logger.warn("Field {} has unsupported type: {}", field.getName(), field.getType().getName());
         }
     }
 

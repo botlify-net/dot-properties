@@ -1,3 +1,5 @@
 propertyOne=foo
 propertyTwo=bar
+propertyInteger=42
+propertyEnumBean=VALUE_TWO
 propertyEnum=FOO

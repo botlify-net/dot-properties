@@ -12,11 +12,19 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class DotPropertiesBeanTest {
 
+    enum MyTestEnum { VALUE_ONE, VALUE_TWO };
+
     @PropertiesElement(name = "propertyOne", required = true)
     private String propertyOne = "default";
 
     @PropertiesElement(name = "propertyTwo", required = true)
     private String propertyTwo = "default";
+
+    @PropertiesElement(name = "propertyInteger", required = true)
+    private int propertyInteger = 0;
+
+    @PropertiesElement(name = "propertyEnumBean", required = true)
+    private MyTestEnum propertyEnum = MyTestEnum.VALUE_ONE;
 
     @Test
     public void testBean() throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException {
@@ -27,6 +35,8 @@ public class DotPropertiesBeanTest {
         assertNotNull(dotProperties);
         assertEquals("foo", propertyOne);
         assertEquals("bar", propertyTwo);
+        assertEquals(42, propertyInteger);
+        assertEquals(MyTestEnum.VALUE_TWO, propertyEnum);
     }
 
 }
