@@ -75,7 +75,7 @@ DotProperties dotProperties = new DotProperties.Builder()
 
 You can use the annotation **@PropertiesElement** to build your DotProperties.
 
-`````java
+```java
 enum MyTestEnum { VALUE_ONE, VALUE_TWO };
 
 @PropertiesElement(name = "propertyOne", required = true)
@@ -96,7 +96,7 @@ public static void main(String[] args) throws NoJavaEnvFoundException, Propertie
         .setPath(".properties.test")
         .build();
 }
-`````
+```
 
 Supported types:
 - Long
@@ -116,7 +116,7 @@ Supported types:
 - ZonedDateTime
 - Enum
 
-````java
+```java
 
 ### Required properties
 
@@ -125,7 +125,7 @@ You can give a list of properties that are required. If one of these properties 
 ````java
 requires(String... properties); // Add the list to the list of required properties
 requires(List<String> properties); // Add the list to the list of required properties
-````
+```
 
 Example:
 ````java
