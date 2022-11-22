@@ -14,6 +14,8 @@ public @interface PropertiesElement {
 
     @NotNull String name();
 
+    @NotNull String[] description() default {};
+
     @NotNull String[] regex() default {};
 
     @NotNull PropertiesFormat.Default[] format() default {};
