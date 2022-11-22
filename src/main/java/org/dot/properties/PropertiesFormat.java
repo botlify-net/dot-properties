@@ -1,6 +1,7 @@
 package org.dot.properties;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,8 +39,8 @@ public class PropertiesFormat {
     @NotNull @Getter
     private final String name;
 
-    @Nullable @Getter
-    private final Pattern pattern;
+    @Nullable @Getter @Setter
+    private Pattern pattern;
 
     public PropertiesFormat(@NotNull String name) {
         this.name = name;
@@ -47,9 +48,13 @@ public class PropertiesFormat {
     }
 
     public PropertiesFormat(@NotNull String name,
-                            @NotNull String regex) {
+                            @Nullable String regex) {
         this.name = name;
-        this.pattern = Pattern.compile(regex);
+        if (regex != null) {
+            this.pattern = Pattern.compile(regex);
+        } else {
+            this.pattern = null;
+        }
     }
 
     public PropertiesFormat(@NotNull final String name,
@@ -89,15 +94,11 @@ public class PropertiesFormat {
         if (o == null || getClass() != o.getClass()) return false;
 
         PropertiesFormat that = (PropertiesFormat) o;
-
-        if (!name.equals(that.name)) return false;
-        return Objects.equals(pattern, that.pattern);
+        return (name.equals(that.name));
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + (pattern != null ? pattern.hashCode() : 0);
-        return result;
+        return (name.hashCode());
     }
 }

@@ -1,7 +1,9 @@
 package org.dot.properties;
 
+import lombok.Singular;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dot.properties.enums.PropertiesElement;
 import org.dot.properties.events.DotPropertiesEvent;
 import org.dot.properties.events.DotPropertiesListener;
 import org.dot.properties.exceptions.NoJavaEnvFoundException;
@@ -11,12 +13,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.time.Duration;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class DotProperties {
 
-    private static final Logger logger = LogManager.getLogger(DotProperties.class);
+    static final Logger logger = LogManager.getLogger(DotProperties.class);
 
     /*
      $      Constructors
@@ -24,10 +30,13 @@ public class DotProperties {
 
     private final Builder builder;
 
-    private DotProperties(Builder builder) throws PropertiesAreMissingException, IOException, NoJavaEnvFoundException {
+    private DotProperties(@NotNull Builder builder) throws IOException, NoJavaEnvFoundException {
+        logger.trace("Initializing new DotProperties");
         this.builder = builder;
+        getRequiredFromBeen();
         refreshProperties();
-        if (builder.refresh) startTaskRefresh();
+        if (builder.refresh)
+            startTaskRefresh();
     }
 
 
@@ -35,6 +44,65 @@ public class DotProperties {
     /*
      $      Private methods
      */
+
+    private void getRequiredFromBeen() {
+        if (builder.bean == null) {
+            logger.trace("No bean found, skipping bean parsing");
+            return;
+        }
+        // get PropertiesElement annotation from bean class
+        logger.trace("Getting PropertiesElement annotation from bean class: {}", builder.bean.getClass().getName());
+        Field[] fields = builder.bean.getClass().getDeclaredFields();
+        logger.trace("Found {} fields in {}", fields.length, builder.bean.getClass().getName());
+        List<PropertiesElement> propertiesElements = new ArrayList<>();
+        for (Field field : fields) {
+            for (Annotation annotation : field.getAnnotations()) {
+                if (!(annotation instanceof PropertiesElement))
+                    continue;
+                propertiesElements.add((PropertiesElement) annotation);
+            }
+        }
+        if (propertiesElements.size() == 0) {
+            logger.trace("No properties element found in bean, skipping bean parsing");
+            return;
+        }
+        logger.trace("Found {} properties element in bean", propertiesElements.size());
+        for (PropertiesElement propElem : propertiesElements) {
+            if (!propElem.required())
+                continue;
+            PropertiesFormat propertiesFormat = new PropertiesFormat(propElem.name());
+            if (propElem.regex().length != 0)
+                propertiesFormat.setPattern(Pattern.compile(propElem.regex()[0]));
+            if (getRequires().contains(propertiesFormat)) {
+                logger.warn("Property {} already exists in requires list", propertiesFormat.getName());
+                continue;
+            }
+            getRequires().add(propertiesFormat);
+            logger.trace("Property {} added to requires list", propertiesFormat.getName());
+        }
+    }
+
+    private void updateAnnotationInBeen(@NotNull String key,
+                                        @NotNull String value) {
+        if (builder.bean == null)
+            return;
+        final Map<Field, PropertiesElement> fieldPropertiesElementMap = getPropertiesElements();
+        for (Field field : fieldPropertiesElementMap.keySet()) {
+            PropertiesElement propertiesElement = fieldPropertiesElementMap.get(field);
+            if (!propertiesElement.name().equals(key))
+                continue;
+            try {
+                if ((field.getModifiers() & Modifier.FINAL) == Modifier.FINAL) {
+                    logger.warn("Field {} is final, skipping updating", field.getName());
+                    continue;
+                }
+                field.setAccessible(true);
+                field.set(builder.bean, value);
+            } catch (IllegalAccessException e) {
+                logger.error("Error while updating bean field: {}", e.getMessage());
+            }
+        }
+    }
 
     private void refreshProperties() throws IOException, NoJavaEnvFoundException {
         Properties properties = (builder.fileName != null) ? FileUtils.readProperties(builder.fileName, builder.inResource) : FileUtils.readProperties(builder.javaEnv);
@@ -44,6 +112,7 @@ public class DotProperties {
             String oldValue = System.getProperty(property);
             String value = properties.getProperty(property);
             System.setProperty(property, value);
+            updateAnnotationInBeen(property, value);
             if (oldValue != null && !oldValue.equals(value))
                 DotPropertiesEvent.togglePropertyChanged(property, oldValue, value);
         }
@@ -89,6 +158,23 @@ public class DotProperties {
         builder.timer.scheduleAtFixedRate(timerTask, 0, builder.duration.toMillis());
     }
 
+    /**
+     * Return the map of all fields annotated with {@link PropertiesElement}.
+     * @return The map of all fields annotated with {@link PropertiesElement}.
+     */
+    private @NotNull Map<Field, PropertiesElement> getPropertiesElements() {
+        Map<Field, PropertiesElement> propertiesElements = new HashMap<>();
+        if (builder.bean == null) return (propertiesElements);
+        for (Field field : builder.bean.getClass().getDeclaredFields()) {
+            for (Annotation annotation : field.getAnnotations()) {
+                if (!(annotation instanceof PropertiesElement))
+                    continue;
+                propertiesElements.put(field, (PropertiesElement) annotation);
+            }
+        }
+        return (propertiesElements);
+    }
+
     /*
      $      Binding
      */
@@ -111,6 +197,7 @@ public class DotProperties {
         String oldValue = System.getProperty(property);
         if (oldValue == null || oldValue.equals(value)) return false;
         System.setProperty(property, value);
+        updateAnnotationInBeen(property, value);
         FileUtils.changePropertyInFile(builder.fileName, property, value);
         DotPropertiesEvent.togglePropertyChanged(property, oldValue, value);
         return true;
@@ -162,6 +249,7 @@ public class DotProperties {
         private boolean refresh = false;
         private final List<PropertiesFormat> requires = new ArrayList<>();
         private final Timer timer = new Timer();
+        private Object bean;
 
         public Builder() {
             // Nothing to do
@@ -221,6 +309,11 @@ public class DotProperties {
         public Builder setResourcePath(String path) {
             this.inResource = true;
             this.fileName = path;
+            return (this);
+        }
+
+        public Builder bean(@Nullable final Object bean) {
+            this.bean = bean;
             return (this);
         }
 
