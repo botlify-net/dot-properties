@@ -1,4 +1,4 @@
-package org.dot.properties.exceptions;
+package net.dot.properties.exceptions;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
-package org.dot.properties;
+package net.dot.properties;
 
-import org.dot.properties.exceptions.NoJavaEnvFoundException;
+import net.dot.properties.exceptions.NoJavaEnvFoundException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

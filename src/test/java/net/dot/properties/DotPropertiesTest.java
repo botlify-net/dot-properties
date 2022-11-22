@@ -1,10 +1,9 @@
-package org.dot.properties;
+package net.dot.properties;
 
-import org.dot.properties.events.DotPropertiesEvent;
-import org.dot.properties.events.DotPropertiesListener;
-import org.dot.properties.exceptions.NoJavaEnvFoundException;
-import org.dot.properties.exceptions.PropertiesAreMissingException;
-import org.junit.jupiter.api.Assertions;
+import net.dot.properties.events.DotPropertiesEvent;
+import net.dot.properties.events.DotPropertiesListener;
+import net.dot.properties.exceptions.NoJavaEnvFoundException;
+import net.dot.properties.exceptions.PropertiesAreMissingException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

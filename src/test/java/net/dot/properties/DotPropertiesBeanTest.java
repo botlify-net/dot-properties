@@ -1,8 +1,8 @@
-package org.dot.properties;
+package net.dot.properties;
 
-import org.dot.properties.enums.PropertiesElement;
-import org.dot.properties.exceptions.NoJavaEnvFoundException;
-import org.dot.properties.exceptions.PropertiesAreMissingException;
+import net.dot.properties.enums.PropertiesElement;
+import net.dot.properties.exceptions.PropertiesAreMissingException;
+import net.dot.properties.exceptions.NoJavaEnvFoundException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

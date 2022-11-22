@@ -115,7 +115,7 @@ Example:
 
 ````java
 
-import org.dot.properties.events.DotPropertiesListener;
+import events.net.dot.properties.DotPropertiesListener;
 
 public class MainClass implements DotPropertiesListener {
 

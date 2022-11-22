@@ -1,14 +1,13 @@
-package org.dot.properties;
+package net.dot.properties;
 
-import lombok.Singular;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dot.properties.enums.PropertiesElement;
-import org.dot.properties.events.DotPropertiesEvent;
-import org.dot.properties.events.DotPropertiesListener;
-import org.dot.properties.exceptions.NoJavaEnvFoundException;
-import org.dot.properties.exceptions.PropertiesAreMissingException;
-import org.dot.properties.exceptions.PropertiesBadFormat;
+import net.dot.properties.enums.PropertiesElement;
+import net.dot.properties.events.DotPropertiesEvent;
+import net.dot.properties.events.DotPropertiesListener;
+import net.dot.properties.exceptions.NoJavaEnvFoundException;
+import net.dot.properties.exceptions.PropertiesAreMissingException;
+import net.dot.properties.exceptions.PropertiesBadFormat;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

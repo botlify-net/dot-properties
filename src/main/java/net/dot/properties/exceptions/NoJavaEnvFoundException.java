@@ -1,4 +1,4 @@
-package org.dot.properties.exceptions;
+package net.dot.properties.exceptions;
 
 public class NoJavaEnvFoundException extends Exception {
 

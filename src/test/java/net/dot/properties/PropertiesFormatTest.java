@@ -1,12 +1,10 @@
-package org.dot.properties;
+package net.dot.properties;
 
-import org.dot.properties.exceptions.NoJavaEnvFoundException;
-import org.dot.properties.exceptions.PropertiesAreMissingException;
+import net.dot.properties.exceptions.PropertiesAreMissingException;
+import net.dot.properties.exceptions.NoJavaEnvFoundException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class PropertiesFormatTest {
 

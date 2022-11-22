@@ -1,7 +1,7 @@
-package org.dot.properties.exceptions;
+package net.dot.properties.exceptions;
 
 import lombok.Getter;
-import org.dot.properties.PropertiesFormat;
+import net.dot.properties.PropertiesFormat;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

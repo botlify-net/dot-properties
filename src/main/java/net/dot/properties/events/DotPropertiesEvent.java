@@ -1,4 +1,4 @@
-package org.dot.properties.events;
+package net.dot.properties.events;
 
 import java.util.ArrayList;
 import java.util.List;
