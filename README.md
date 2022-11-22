@@ -71,6 +71,53 @@ DotProperties dotProperties = new DotProperties.Builder()
         .build();
 ````
 
+### Build with annotations
+
+You can use the annotation **@PropertiesElement** to build your DotProperties.
+
+`````java
+enum MyTestEnum { VALUE_ONE, VALUE_TWO };
+
+@PropertiesElement(name = "propertyOne", required = true)
+private String propertyOne = "default";
+
+@PropertiesElement(name = "propertyTwo", required = true)
+private String propertyTwo = "default";
+
+@PropertiesElement(name = "propertyInteger", required = true)
+private int propertyInteger = 0;
+
+@PropertiesElement(name = "propertyEnumBean", required = true)
+private MyTestEnum propertyEnum = MyTestEnum.VALUE_ONE;
+
+public static void main(String[] args) throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException{
+    DotProperties dotProperties=new DotProperties.Builder()
+        .bean(this)
+        .setPath(".properties.test")
+        .build();
+}
+`````
+
+Supported types:
+- Long
+- Integer
+- Short
+- Byte
+- Double
+- Float
+- Boolean
+- Character
+- Date
+- Duration
+- Instant
+- String
+- File
+- Pattern
+- ZonedDateTime
+- Enum
+
+````java
+
 ### Required properties
 
 You can give a list of properties that are required. If one of these properties is not found, an exception will be thrown.
