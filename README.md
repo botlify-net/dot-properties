@@ -116,10 +116,9 @@ Supported types:
 - ZonedDateTime
 - Enum
 
-```java
-
 ### Required properties
 
+```java
 You can give a list of properties that are required. If one of these properties is not found, an exception will be thrown.
 
 ````java
