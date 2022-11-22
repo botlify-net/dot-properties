@@ -54,5 +54,4 @@ public class DotPropertiesTest implements DotPropertiesListener {
         assertEquals("newValue", newValue);
         eventCalled = true;
     }
-
 }

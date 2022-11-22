@@ -46,19 +46,36 @@ public class PropertiesFormat {
         this.pattern = null;
     }
 
-    public PropertiesFormat(@NotNull String name, @NotNull String regex) {
+    public PropertiesFormat(@NotNull String name,
+                            @NotNull String regex) {
         this.name = name;
         this.pattern = Pattern.compile(regex);
     }
 
-    public PropertiesFormat(@NotNull final String name, @NotNull final Pattern pattern) {
+    public PropertiesFormat(@NotNull final String name,
+                            @NotNull final Pattern pattern) {
         this.name = name;
         this.pattern = pattern;
     }
 
-    public PropertiesFormat(@NotNull final String name, @NotNull Default defaultFormat) {
+    public PropertiesFormat(@NotNull final String name,
+                            @NotNull Default defaultFormat) {
         this.name = name;
         this.pattern = Pattern.compile(defaultFormat.getRegex());
+    }
+
+    public PropertiesFormat(@NotNull final String name,
+                            @NotNull final Class<? extends Enum<?>> enumClass) {
+        this.name = name;
+        // create a pattern from the enum values
+        StringBuilder sb = new StringBuilder();
+        for (Enum<?> e : enumClass.getEnumConstants()) {
+            if (sb.length() > 0) {
+                sb.append("|");
+            }
+            sb.append(e.name());
+        }
+        this.pattern = Pattern.compile(sb.toString());
     }
 
     public boolean verifyFormat(@NotNull final String value) {
