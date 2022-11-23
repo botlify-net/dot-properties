@@ -27,6 +27,7 @@ public class PropertyFieldManager {
         fields.add(new BytePropertyField());
         fields.add(new CharacterPropertyField());
         fields.add(new DatePropertyField());
+        fields.add(new DurationPropertyField());
         fields.add(new FloatPropertyField());
         fields.add(new InstantPropertyField());
         fields.add(new IntegerPropertyField());
