@@ -1,8 +1,10 @@
 package net.dot.properties;
 
+import net.dot.properties.fields.PropertyField;
+import net.dot.properties.fields.PropertyFieldManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import net.dot.properties.enums.PropertiesElement;
+import net.dot.properties.enums.Property;
 import net.dot.properties.events.DotPropertiesEvent;
 import net.dot.properties.events.DotPropertiesListener;
 import net.dot.properties.exceptions.NoJavaEnvFoundException;
@@ -23,7 +25,7 @@ import java.util.regex.Pattern;
 
 public class DotProperties {
 
-    static final Logger logger = LogManager.getLogger(DotProperties.class);
+    public static final Logger logger = LogManager.getLogger(DotProperties.class);
 
     /*
      $      Constructors
@@ -55,12 +57,12 @@ public class DotProperties {
         logger.trace("Getting PropertiesElement annotation from bean class: {}", builder.bean.getClass().getName());
         Field[] fields = builder.bean.getClass().getDeclaredFields();
         logger.trace("Found {} fields in {}", fields.length, builder.bean.getClass().getName());
-        List<PropertiesElement> propertiesElements = new ArrayList<>();
+        List<Property> propertiesElements = new ArrayList<>();
         for (Field field : fields) {
             for (Annotation annotation : field.getAnnotations()) {
-                if (!(annotation instanceof PropertiesElement))
+                if (!(annotation instanceof Property))
                     continue;
-                propertiesElements.add((PropertiesElement) annotation);
+                propertiesElements.add((Property) annotation);
             }
         }
         if (propertiesElements.size() == 0) {
@@ -68,7 +70,7 @@ public class DotProperties {
             return;
         }
         logger.trace("Found {} properties element in bean", propertiesElements.size());
-        for (PropertiesElement propElem : propertiesElements) {
+        for (Property propElem : propertiesElements) {
             if (!propElem.required())
                 continue;
             PropertiesFormat propertiesFormat = new PropertiesFormat(propElem.name());
@@ -89,65 +91,21 @@ public class DotProperties {
                                         @NotNull String value) {
         if (builder.bean == null)
             return;
-        final Map<Field, PropertiesElement> fieldPropertiesElementMap = getPropertiesElements();
+        final Map<Field, Property> fieldPropertiesElementMap = getPropertiesElements();
         for (Field field : fieldPropertiesElementMap.keySet()) {
-            PropertiesElement propertiesElement = fieldPropertiesElementMap.get(field);
+            Property propertiesElement = fieldPropertiesElementMap.get(field);
             if (!propertiesElement.name().equals(key))
                 continue;
             try {
-                if ((field.getModifiers() & Modifier.FINAL) == Modifier.FINAL) {
-                    logger.warn("Field {} is final, skipping updating", field.getName());
-                    continue;
-                }
-                field.setAccessible(true);
-                updateField(field, value);
+                logger.trace("Updating field {} in bean...", field.getName());
+                boolean result = PropertyFieldManager.parseField(builder.bean, field, value);
+                if (!result)
+                    logger.warn("Unable to parse field {} in bean {}", field.getName(), builder.bean.getClass().getName());
+                else
+                    logger.trace("Field {} in bean {} updated with value {}", field.getName(), builder.bean.getClass().getName(), value);
             } catch (Exception e) {
                 logger.error("Error while updating bean field: {}", e.getMessage());
             }
-        }
-    }
-
-    private void updateField(@NotNull Field field, @NotNull String value) throws IllegalAccessException {
-        if (Long.TYPE.equals(field.getType())) {
-            field.setLong(builder.bean, Long.parseLong(value));
-        } else if (Integer.TYPE.equals(field.getType())) {
-            field.setInt(builder.bean, Integer.parseInt(value));
-        } else if (Short.TYPE.equals(field.getType())) {
-            field.setShort(builder.bean, Short.parseShort(value));
-        } else if (Byte.TYPE.equals(field.getType())) {
-            field.setByte(builder.bean, Byte.parseByte(value));
-        } else if (Double.TYPE.equals(field.getType())) {
-            field.setDouble(builder.bean, Double.parseDouble(value));
-        } else if (Float.TYPE.equals(field.getType())) {
-            field.setFloat(builder.bean, Float.parseFloat(value));
-        } else if (Boolean.TYPE.equals(field.getType())) {
-            field.setBoolean(builder.bean, Boolean.parseBoolean(value));
-        } else if (Character.TYPE.equals(field.getType())) {
-            field.setChar(builder.bean, value.charAt(0));
-        } else if (Date.class.equals(field.getType())) {
-            field.set(builder.bean, new Date(Long.parseLong(value)));
-        } else if (Duration.class.equals(field.getType())) {
-            field.set(builder.bean, Duration.ofMillis(Long.parseLong(value)));
-        } else if (Instant.class.equals(field.getType())) {
-            field.set(builder.bean, Instant.ofEpochMilli(Long.parseLong(value)));
-        } else if (String.class.equals(field.getType())) {
-            field.set(builder.bean, value);
-        } else if (File.class.equals(field.getType())) {
-            field.set(builder.bean, new File(value));
-        } else if (Pattern.class.equals(field.getType())) {
-            field.set(builder.bean, Pattern.compile(value));
-        } else if (ZonedDateTime.class.equals(field.getType())) {
-            field.set(builder.bean, ZonedDateTime.parse(value));
-        } else if (field.getType().isEnum()) {
-            Enum[] enumConstants = (Enum[]) field.getType().getEnumConstants();
-            Enum result = Arrays.stream(enumConstants).filter(e -> e.name().equals(value)).findFirst().orElse(null);
-            if (result == null) {
-                logger.warn("Enum constant {} not found in {}", value, field.getType().getName());
-                return;
-            }
-            field.set(builder.bean, result);
-        } else {
-            logger.warn("Field {} has unsupported type: {}", field.getName(), field.getType().getName());
         }
     }
 
@@ -206,17 +164,17 @@ public class DotProperties {
     }
 
     /**
-     * Return the map of all fields annotated with {@link PropertiesElement}.
-     * @return The map of all fields annotated with {@link PropertiesElement}.
+     * Return the map of all fields annotated with {@link Property}.
+     * @return The map of all fields annotated with {@link Property}.
      */
-    private @NotNull Map<Field, PropertiesElement> getPropertiesElements() {
-        Map<Field, PropertiesElement> propertiesElements = new HashMap<>();
+    private @NotNull Map<Field, Property> getPropertiesElements() {
+        Map<Field, Property> propertiesElements = new HashMap<>();
         if (builder.bean == null) return (propertiesElements);
         for (Field field : builder.bean.getClass().getDeclaredFields()) {
             for (Annotation annotation : field.getAnnotations()) {
-                if (!(annotation instanceof PropertiesElement))
+                if (!(annotation instanceof Property))
                     continue;
-                propertiesElements.put(field, (PropertiesElement) annotation);
+                propertiesElements.put(field, (Property) annotation);
             }
         }
         return (propertiesElements);

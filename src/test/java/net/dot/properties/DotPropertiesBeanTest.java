@@ -1,6 +1,6 @@
 package net.dot.properties;
 
-import net.dot.properties.enums.PropertiesElement;
+import net.dot.properties.enums.Property;
 import net.dot.properties.exceptions.PropertiesAreMissingException;
 import net.dot.properties.exceptions.NoJavaEnvFoundException;
 import org.junit.jupiter.api.Test;
@@ -12,19 +12,19 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class DotPropertiesBeanTest {
 
-    enum MyTestEnum { VALUE_ONE, VALUE_TWO };
+    public enum MyTestEnum { VALUE_ONE, VALUE_TWO };
 
-    @PropertiesElement(name = "propertyOne", required = true)
-    private String propertyOne = "default";
+    @Property(name = "propertyOne", required = true)
+    public String propertyOne = "default";
 
-    @PropertiesElement(name = "propertyTwo", required = true)
-    private String propertyTwo = "default";
+    @Property(name = "propertyTwo", required = true)
+    public String propertyTwo = "default";
 
-    @PropertiesElement(name = "propertyInteger", required = true)
-    private int propertyInteger = 0;
+    @Property(name = "propertyInteger", required = true)
+    public int propertyInteger = 0;
 
-    @PropertiesElement(name = "propertyEnumBean", required = true)
-    private MyTestEnum propertyEnum = MyTestEnum.VALUE_ONE;
+    @Property(name = "propertyEnumBean", required = true)
+    public MyTestEnum propertyEnum = MyTestEnum.VALUE_ONE;
 
     @Test
     public void testBean() throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException {
