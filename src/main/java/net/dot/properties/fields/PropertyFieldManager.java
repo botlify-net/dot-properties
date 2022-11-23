@@ -1,6 +1,5 @@
 package net.dot.properties.fields;
 
-import net.dot.properties.enums.Property;
 import net.dot.properties.fields.implementations.*;
 import org.jetbrains.annotations.NotNull;
 

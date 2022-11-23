@@ -78,16 +78,16 @@ You can use the annotation **@PropertiesElement** to build your DotProperties.
 ```java
 enum MyTestEnum { VALUE_ONE, VALUE_TWO };
 
-@PropertiesElement(name = "propertyOne", required = true)
+@Property(name = "propertyOne", required = true)
 private String propertyOne = "default";
 
-@PropertiesElement(name = "propertyTwo", required = true)
+@Property(name = "propertyTwo", required = true)
 private String propertyTwo = "default";
 
-@PropertiesElement(name = "propertyInteger", required = true)
+@Property(name = "propertyInteger", required = true)
 private int propertyInteger = 0;
 
-@PropertiesElement(name = "propertyEnumBean", required = true)
+@Property(name = "propertyEnumBean", required = true)
 private MyTestEnum propertyEnum = MyTestEnum.VALUE_ONE;
 
 public static void main(String[] args) throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException{
@@ -118,13 +118,12 @@ Supported types:
 
 ### Required properties
 
-```java
 You can give a list of properties that are required. If one of these properties is not found, an exception will be thrown.
 
 ````java
 requires(String... properties); // Add the list to the list of required properties
 requires(List<String> properties); // Add the list to the list of required properties
-```
+````
 
 Example:
 ````java
