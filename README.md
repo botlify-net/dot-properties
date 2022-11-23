@@ -42,18 +42,18 @@ This section help you to custom DotProperties.
 
 You can use these functions in builder to activate the refreshing of the properties.
 
-````java
+```java
 refresh(); // Refresh every 30 seconds
 refresh(int seconds); // Number of seconds between each refresh
 refresh(Duration duration); // Duration between each refresh
-````
+```
 
 Example:
-````java
+```java
 DotProperties dotProperties = new DotProperties.Builder()
         .refresh()
         .build();
-````
+```
 
 ### Custom properties file
 
