@@ -4,3 +4,4 @@ propertyInteger=42
 propertyEnumBean=VALUE_TWO
 propertyEnum=FOO
 propertyLocalTime=12:00
+propertyZoneId=Europe/Paris

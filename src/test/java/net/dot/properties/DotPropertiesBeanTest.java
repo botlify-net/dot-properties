@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.time.LocalTime;
+import java.time.ZoneId;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -30,6 +31,9 @@ public class DotPropertiesBeanTest {
     @Property(name = "propertyLocalTime", required = true)
     public LocalTime propertyLocalTime = LocalTime.of(11, 0, 0);
 
+    @Property(name = "propertyZoneId", required = true)
+    public ZoneId propertyZoneId;
+
     @Test
     public void testBean() throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException {
         DotProperties dotProperties = new DotProperties.Builder()
@@ -42,6 +46,8 @@ public class DotPropertiesBeanTest {
         assertEquals(42, propertyInteger);
         assertEquals(MyTestEnum.VALUE_TWO, propertyEnum);
         assertEquals(LocalTime.of(12, 0, 0), propertyLocalTime);
+        assertNotNull(propertyZoneId);
+        assertEquals(ZoneId.of("Europe/Paris"), propertyZoneId);
     }
 
 }

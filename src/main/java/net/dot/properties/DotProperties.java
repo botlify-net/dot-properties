@@ -104,7 +104,7 @@ public class DotProperties {
                 else
                     logger.trace("Field {} in bean {} updated with value {}", field.getName(), builder.bean.getClass().getName(), value);
             } catch (Exception e) {
-                logger.error("Error while updating bean field: {}", e.getMessage());
+                logger.error("Error while updating bean field: {}", e.getMessage(), e);
             }
         }
     }

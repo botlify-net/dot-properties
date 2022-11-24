@@ -14,8 +14,8 @@ public abstract class PropertyField {
 
     public @NotNull Object getValue(@NotNull final String value) {
         Object result = parseString(value);
-        if (result.getClass() != type)
-            throw new IllegalArgumentException("The value is not of the type " + type.getName());
+        // if (result.getClass() != type)
+        //     throw new IllegalArgumentException("The value is " + result.getClass().getName() + " but should be " + type.getName());
         return (result);
     }
 

@@ -12,7 +12,7 @@ public class ZoneIdPropertyField extends PropertyField {
     }
 
     @Override
-    public @NotNull Object parseString(@NotNull String value) {
+    public @NotNull ZoneId parseString(@NotNull String value) {
         return (ZoneId.of(value));
     }
 }

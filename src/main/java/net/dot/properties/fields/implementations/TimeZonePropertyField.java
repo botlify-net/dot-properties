@@ -12,7 +12,7 @@ public class TimeZonePropertyField extends PropertyField {
     }
 
     @Override
-    public @NotNull Object parseString(@NotNull String value) {
+    public @NotNull TimeZone parseString(@NotNull String value) {
         return (TimeZone.getTimeZone(value));
     }
 }
