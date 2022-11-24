@@ -6,6 +6,7 @@ import net.dot.properties.exceptions.NoJavaEnvFoundException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -26,6 +27,9 @@ public class DotPropertiesBeanTest {
     @Property(name = "propertyEnumBean", required = true)
     public MyTestEnum propertyEnum = MyTestEnum.VALUE_ONE;
 
+    @Property(name = "propertyLocalTime", required = true)
+    public LocalTime propertyLocalTime = LocalTime.of(11, 0, 0);
+
     @Test
     public void testBean() throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException {
         DotProperties dotProperties = new DotProperties.Builder()
@@ -37,6 +41,7 @@ public class DotPropertiesBeanTest {
         assertEquals("bar", propertyTwo);
         assertEquals(42, propertyInteger);
         assertEquals(MyTestEnum.VALUE_TWO, propertyEnum);
+        assertEquals(LocalTime.of(12, 0, 0), propertyLocalTime);
     }
 
 }

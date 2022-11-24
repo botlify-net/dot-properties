@@ -9,7 +9,7 @@ import java.time.ZonedDateTime;
 public class LocalTimePropertyField extends PropertyField {
 
     public LocalTimePropertyField() {
-        super(ZonedDateTime.class);
+        super(LocalTime.class);
     }
 
     @Override

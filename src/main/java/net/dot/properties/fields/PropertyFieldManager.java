@@ -73,8 +73,7 @@ public class PropertyFieldManager {
                     field.set(bean, propertyField.getValue(value));
                     return (true);
                 } catch (IllegalAccessException e) {
-                    logger.error("Unable to set field {} to value {}",
-                            field.getName(), value);
+                    logger.error("Unable to set field {} to value {}", field.getName(), value, e);
                     return (false);
                 }
             }

@@ -3,3 +3,4 @@ propertyTwo=bar
 propertyInteger=42
 propertyEnumBean=VALUE_TWO
 propertyEnum=FOO
+propertyLocalTime=12:00
