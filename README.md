@@ -114,7 +114,9 @@ Supported types:
 - File
 - Pattern
 - ZonedDateTime
+- TimeZone
 - Enum
+- ZoneId
 
 ### Required properties
 

@@ -33,7 +33,9 @@ public class PropertyFieldManager {
         fields.add(new IntegerPropertyField());
         fields.add(new LocalTimePropertyField());
         fields.add(new StringPropertyField());
+        fields.add(new TimeZonePropertyField());
         fields.add(new ZonedDateTimePropertyField());
+        fields.add(new ZoneIdPropertyField());
     }
 
     public static void addPropertyField(@NotNull PropertyField field) {
