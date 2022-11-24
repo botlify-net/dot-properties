@@ -20,7 +20,7 @@ public class PropertiesFormat {
         FLOAT("^(\\d+\\.\\d+)$"),
         STRING("^(.+)$"),
         LOCALTIME("^(\\d{1,2}):(\\d{1,2})$"),
-        MONGO_URL("^(mongodb://)(\\w+):(\\w+)@([\\w.]+):(\\d+)/(\\w+)$"),
+        MONGO_URL("^(mongodb:(?:\\/{2})?)((\\w+?):(\\w+?)@|:?@?)(\\w+?):(\\d+)\\/(\\w+?)$"),
         POSTGRESQL_URL("^(jdbc:postgresql://)([\\w.]+):(\\d+)/(\\w+)$"),
         MYSQL_URL("^(jdbc:mysql://)([\\w.]+):(\\d+)/(\\w+)$"),
         REDIS_URL("^(redis://)(\\w+):(\\w+)@([\\w.]+):(\\d+)$");
