@@ -18,7 +18,7 @@ class PropertiesFormatTest {
     }
 
     @Test
-    public void testFromEnum() throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException {
+    public void testFromEnum() throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException, IllegalAccessException {
         PropertiesFormat propertiesFormat = new PropertiesFormat("propertyEnum", TestEnum.class);
         DotProperties dotProperties = new DotProperties.Builder()
                 .requires(propertiesFormat)

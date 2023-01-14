@@ -20,22 +20,22 @@ public class DotPropertiesBeanTest {
     private String propertyOne = "default";
 
     @Property(name = "propertyTwo", required = true)
-    public String propertyTwo = "default";
+    private String propertyTwo = "default";
 
     @Property(name = "propertyInteger", required = true)
-    public int propertyInteger = 0;
+    private int propertyInteger = 0;
 
     @Property(name = "propertyEnumBean", required = true)
-    public MyTestEnum propertyEnum = MyTestEnum.VALUE_ONE;
+    private MyTestEnum propertyEnum = MyTestEnum.VALUE_ONE;
 
     @Property(name = "propertyLocalTime", required = true)
-    public LocalTime propertyLocalTime = LocalTime.of(11, 0, 0);
+    private LocalTime propertyLocalTime = LocalTime.of(11, 0, 0);
 
     @Property(name = "propertyZoneId", required = true)
-    public ZoneId propertyZoneId;
+    private ZoneId propertyZoneId;
 
     @Test
-    public void testBean() throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException {
+    public void testBean() throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException, IllegalAccessException {
         DotProperties dotProperties = new DotProperties.Builder()
                 .bean(this)
                 .setPath(".properties.test")

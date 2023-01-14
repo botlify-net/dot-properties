@@ -15,7 +15,7 @@ public class DotPropertiesTest implements DotPropertiesListener {
     private static boolean eventCalled = false;
 
     @Test
-    public void testDotProperties() throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException {
+    public void testDotProperties() throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException, IllegalAccessException {
         DotProperties dotProperties = new DotProperties.Builder()
                 .requires("propertyOne", "propertyTwo")
                 .setPath(".properties.test")

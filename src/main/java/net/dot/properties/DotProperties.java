@@ -29,7 +29,7 @@ public class DotProperties {
 
     private final Builder builder;
 
-    private DotProperties(@NotNull Builder builder) throws IOException, NoJavaEnvFoundException {
+    private DotProperties(@NotNull Builder builder) throws IOException, NoJavaEnvFoundException, IllegalAccessException {
         logger.trace("Initializing new DotProperties");
         this.builder = builder;
         getRequiredFromBeen();
@@ -84,7 +84,7 @@ public class DotProperties {
     }
 
     private void updateAnnotationInBeen(@NotNull final String key,
-                                        @NotNull final String value) {
+                                        @NotNull final String value) throws IllegalAccessException {
         if (builder.bean == null)
             return;
         final Map<Field, Property> fieldPropertiesElementMap = getPropertiesElements();
@@ -92,20 +92,16 @@ public class DotProperties {
             Property propertiesElement = fieldPropertiesElementMap.get(field);
             if (!propertiesElement.name().equals(key))
                 continue;
-            try {
-                logger.trace("Updating field {} in bean...", field.getName());
-                boolean result = PropertyFieldManager.parseField(builder.bean, field, value);
-                if (!result)
-                    logger.warn("Unable to parse field {} in bean {}", field.getName(), builder.bean.getClass().getName());
-                else
-                    logger.trace("Field {} in bean {} updated with value {}", field.getName(), builder.bean.getClass().getName(), value);
-            } catch (Exception e) {
-                logger.error("Error while updating bean field: {}", e.getMessage(), e);
-            }
+            logger.trace("Updating field {} in bean...", field.getName());
+            boolean result = PropertyFieldManager.parseField(builder.bean, field, value);
+            if (!result)
+                logger.warn("Unable to parse field {} in bean {}", field.getName(), builder.bean.getClass().getName());
+            else
+                logger.trace("Field {} in bean {} updated with value {}", field.getName(), builder.bean.getClass().getName(), value);
         }
     }
 
-    private void refreshProperties() throws IOException, NoJavaEnvFoundException {
+    private void refreshProperties() throws IOException, NoJavaEnvFoundException, IllegalAccessException {
         Properties properties = (builder.fileName != null) ? FileUtils.readProperties(builder.fileName, builder.inResource) : FileUtils.readProperties(builder.javaEnv);
         checkIfAllPropertiesExist(properties);
         checkAllFormats(properties);
@@ -194,7 +190,7 @@ public class DotProperties {
      */
 
     public boolean setProperty(@NotNull final String property,
-                               @NotNull final String value) throws IOException {
+                               @NotNull final String value) throws IOException, IllegalAccessException {
         String oldValue = System.getProperty(property);
         if (oldValue == null || oldValue.equals(value)) return false;
         System.setProperty(property, value);
@@ -312,12 +308,12 @@ public class DotProperties {
             return (this);
         }
 
-        public Builder bean(@Nullable final Object bean) {
+        public Builder bean(@NotNull final Object bean) {
             this.bean = bean;
             return (this);
         }
 
-        public DotProperties build() throws IOException, PropertiesAreMissingException, NoJavaEnvFoundException {
+        public DotProperties build() throws IOException, PropertiesAreMissingException, NoJavaEnvFoundException, IllegalAccessException {
             return (new DotProperties(this));
         }
 

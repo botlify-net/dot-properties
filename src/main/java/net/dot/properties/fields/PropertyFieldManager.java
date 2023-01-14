@@ -82,6 +82,7 @@ public abstract class PropertyFieldManager {
                                                @NotNull final String value) throws IllegalAccessException {
         if (!field.getType().isPrimitive() && !field.getType().isEnum())
             return (false);
+        field.setAccessible(true);
         if (int.class.equals(field.getType())) {
             field.setInt(bean, Integer.parseInt(value));
         } else if (float.class.equals(field.getType())) {
@@ -101,6 +102,7 @@ public abstract class PropertyFieldManager {
         } else if (field.getType().isEnum()) {
             field.set(bean, Enum.valueOf((Class<Enum>) field.getType(), value));
         }
+        field.setAccessible(false);
         return (true);
     }
 
