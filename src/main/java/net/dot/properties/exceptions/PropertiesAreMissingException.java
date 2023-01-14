@@ -1,17 +1,18 @@
 package net.dot.properties.exceptions;
 
+import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class PropertiesAreMissingException extends Exception {
 
+    @NotNull @Getter
     private final List<String> properties;
 
-    public PropertiesAreMissingException(List<String> properties) {
-        super("Properties are missing: " + properties.toString());
+    public PropertiesAreMissingException(@NotNull final List<String> properties) {
+        super("Properties are missing: " + properties);
         this.properties = properties;
     }
 
-    public List<String> getProperties() {
-        return properties;
-    }
 }

@@ -11,11 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import static net.dot.properties.DotProperties.logger;
 
-public class PropertyFieldManager {
-
-    private PropertyFieldManager() {
-
-    }
+public abstract class PropertyFieldManager {
 
     private static final List<PropertyField> fields = new ArrayList<>();
 
@@ -51,18 +47,13 @@ public class PropertyFieldManager {
      * @param value The value to update the field with.
      * @return True if the field was updated, false otherwise.
      */
-    public static boolean parseField(@NotNull Object bean,
-                                     @NotNull Field field,
-                                     @NotNull String value) throws IllegalAccessException {
+    public static boolean parseField(@NotNull final Object bean,
+                                     @NotNull final Field field,
+                                     @NotNull final String value) throws IllegalAccessException {
         lock.lock();
         // Verify if the field is final.
         if ((field.getModifiers() & Modifier.FINAL) == Modifier.FINAL) {
             logger.warn("Field {} is final, skipping updating", field.getName());
-            return (false);
-        }
-        // Verify if the field is private.
-        if ((field.getModifiers() & Modifier.PRIVATE) == Modifier.PRIVATE) {
-            logger.warn("Field {} is private, skipping updating", field.getName());
             return (false);
         }
         // Verify if the field is primitive.
@@ -86,9 +77,9 @@ public class PropertyFieldManager {
         return (false);
     }
 
-    private static boolean parsePrimitiveField(@NotNull Object bean,
-                                               @NotNull Field field,
-                                               @NotNull String value) throws IllegalAccessException {
+    private static boolean parsePrimitiveField(@NotNull final Object bean,
+                                               @NotNull final Field field,
+                                               @NotNull final String value) throws IllegalAccessException {
         if (!field.getType().isPrimitive() && !field.getType().isEnum())
             return (false);
         if (int.class.equals(field.getType())) {
@@ -117,7 +108,7 @@ public class PropertyFieldManager {
      * Return a list of all the fields that are supported by the manager.
      * @return A list of all the fields that are supported by the manager.
      */
-    public @NotNull List<Class<?>> getImplementedClassList() {
+    public static @NotNull List<Class<?>> getImplementedClassList() {
         List<Class<?>> classes = new ArrayList<>();
         lock.lock();
         for (PropertyField field : fields)

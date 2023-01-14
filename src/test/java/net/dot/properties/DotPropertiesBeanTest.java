@@ -17,7 +17,7 @@ public class DotPropertiesBeanTest {
     public enum MyTestEnum { VALUE_ONE, VALUE_TWO };
 
     @Property(name = "propertyOne", required = true)
-    public String propertyOne = "default";
+    private String propertyOne = "default";
 
     @Property(name = "propertyTwo", required = true)
     public String propertyTwo = "default";

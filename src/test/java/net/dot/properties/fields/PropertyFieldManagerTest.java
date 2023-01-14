@@ -16,7 +16,7 @@ class PropertyFieldManagerTest {
     Integer objectIntField = 1;
 
     @Test
-    public void testParseField() throws NoSuchFieldException, IllegalAccessException {
+    public void testParseField() throws IllegalAccessException {
         Field field = Arrays.stream(getClass().getDeclaredFields())
                 .filter(f -> f.getName().equals("stringField"))
                 .findFirst().orElse(null);

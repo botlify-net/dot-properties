@@ -1,25 +1,21 @@
 package net.dot.properties;
 
-import net.dot.properties.fields.PropertyField;
-import net.dot.properties.fields.PropertyFieldManager;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import net.dot.properties.enums.Property;
 import net.dot.properties.events.DotPropertiesEvent;
 import net.dot.properties.events.DotPropertiesListener;
 import net.dot.properties.exceptions.NoJavaEnvFoundException;
 import net.dot.properties.exceptions.PropertiesAreMissingException;
 import net.dot.properties.exceptions.PropertiesBadFormat;
+import net.dot.properties.fields.PropertyFieldManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.time.Duration;
-import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -87,8 +83,8 @@ public class DotProperties {
         }
     }
 
-    private void updateAnnotationInBeen(@NotNull String key,
-                                        @NotNull String value) {
+    private void updateAnnotationInBeen(@NotNull final String key,
+                                        @NotNull final String value) {
         if (builder.bean == null)
             return;
         final Map<Field, Property> fieldPropertiesElementMap = getPropertiesElements();
@@ -225,19 +221,19 @@ public class DotProperties {
      */
 
 
-    public String getJavaEnv() {
+    public @NotNull String getJavaEnv() {
         return (builder.javaEnv);
     }
 
-    public Duration getDuration() {
+    public @NotNull Duration getDuration() {
         return (builder.duration);
     }
 
-    public List<PropertiesFormat> getRequires() {
+    public @NotNull List<PropertiesFormat> getRequires() {
         return (builder.requires);
     }
 
-    public Boolean isRefresh() {
+    public @NotNull Boolean isRefresh() {
         return (builder.refresh);
     }
 
@@ -260,17 +256,16 @@ public class DotProperties {
             // Nothing to do
         }
 
-        public Builder setJavaEnv(String javaEnv) {
+        public Builder setJavaEnv(@NotNull final String javaEnv) {
             this.javaEnv = javaEnv;
             return (this);
         }
 
-        public Builder requires(List<String> properties) {
-            if (properties == null) return (this);
+        public Builder requires(@NotNull final List<String> properties) {
             return (requires(properties.toArray(new String[0])));
         }
 
-        public Builder requires(String... properties) {
+        public Builder requires(@NotNull final String... properties) {
             if (properties == null) return (this);
             for (String str : properties) {
                 if (!this.requires.contains(new PropertiesFormat(str)))
@@ -279,7 +274,7 @@ public class DotProperties {
             return (this);
         }
 
-        public Builder requires(PropertiesFormat... properties) {
+        public Builder requires(@NotNull final PropertiesFormat... properties) {
             if (properties == null) return (this);
             for (PropertiesFormat str : properties) {
                 if (!this.requires.contains(str))
@@ -293,25 +288,25 @@ public class DotProperties {
             return (this);
         }
 
-        public Builder refresh(int seconds) {
+        public Builder refresh(final int seconds) {
             this.refresh = true;
             this.duration = Duration.ofSeconds(seconds);
             return (this);
         }
 
-        public Builder refresh(Duration duration) {
+        public Builder refresh(@NotNull final Duration duration) {
             this.refresh = true;
             this.duration = duration;
             return (this);
         }
 
-        public Builder setPath(String path) {
+        public Builder setPath(@NotNull final String path) {
             this.inResource = false;
             this.fileName = path;
             return (this);
         }
 
-        public Builder setResourcePath(String path) {
+        public Builder setResourcePath(@NotNull final String path) {
             this.inResource = true;
             this.fileName = path;
             return (this);

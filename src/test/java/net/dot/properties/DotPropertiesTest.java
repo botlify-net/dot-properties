@@ -27,16 +27,13 @@ public class DotPropertiesTest implements DotPropertiesListener {
     }
 
     @Test
-    public void testDotPropertiesNoFile() throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException {
-        try {
-            DotProperties dotProperties = new DotProperties.Builder()
+    public void testDotPropertiesNoFile() {
+        assertThrows(IOException.class, () -> {
+            new DotProperties.Builder()
                     .requires("propertyOne", "propertyTwo")
                     .setResourcePath(".properties.notexist")
                     .build();
-            assertNotNull(dotProperties);
-        } catch (IOException e) {
-            assertNotNull(e);
-        }
+        });
     }
 
     @Test

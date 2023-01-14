@@ -9,10 +9,11 @@ import java.util.Properties;
 
 class FileUtils {
 
-    public static Properties readProperties(@NotNull String javaEnv) throws NoJavaEnvFoundException, IOException {
-        String javaProps = System.getenv(javaEnv);
-        if (javaProps == null) throw (new NoJavaEnvFoundException(javaEnv));
-        String name1 = javaProps + ".properties", name2 =  ".properties." + javaProps;
+    public static Properties readProperties(@NotNull final String javaEnv) throws NoJavaEnvFoundException, IOException {
+        final String javaProps = System.getenv(javaEnv);
+        if (javaProps == null)
+            throw (new NoJavaEnvFoundException(javaEnv));
+        final String name1 = javaProps + ".properties", name2 =  ".properties." + javaProps;
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 try {
@@ -23,7 +24,8 @@ class FileUtils {
                 }
             }
         }
-        throw new IOException(name1 + " or " + name2 + " are missing in root directory or resource directory or is in bad format.");
+        throw (new IOException(name1 + " or " + name2 + " are missing in root directory " +
+                "or resource directory or is in bad format."));
     }
 
     public static Properties readProperties(@NotNull String path, boolean resource) throws IOException {
@@ -33,7 +35,7 @@ class FileUtils {
         return (result);
     }
 
-    public static @Nullable Properties readPropertiesFromPath(@NotNull String path) {
+    public static @Nullable Properties readPropertiesFromPath(@NotNull final String path) {
         Properties properties = new Properties();
         try {
             properties.load(new FileInputStream(path));
@@ -43,7 +45,7 @@ class FileUtils {
         return (properties);
     }
 
-    public static @Nullable Properties readPropertiesFromResource(@NotNull String path) {
+    public static @Nullable Properties readPropertiesFromResource(@NotNull final String path) {
         try (InputStream inputStream = FileUtils.class.getResourceAsStream(path)) {
             Properties properties = new Properties();
             properties.load(inputStream);
@@ -53,7 +55,7 @@ class FileUtils {
         }
     }
 
-    public static boolean changePropertyInFile(@NotNull final String filename,
+    static boolean changePropertyInFile(@NotNull final String filename,
                                                @NotNull final String key,
                                                @NotNull final String value) throws IOException {
         final File tmpFile = new File(filename + ".tmp");

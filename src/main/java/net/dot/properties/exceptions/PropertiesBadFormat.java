@@ -11,7 +11,7 @@ public class PropertiesBadFormat extends Exception {
     @NotNull @Getter
     private final List<PropertiesFormat> propertiesFormat;
 
-    public PropertiesBadFormat(@NotNull List<PropertiesFormat> propertiesFormat) {
+    public PropertiesBadFormat(@NotNull final List<PropertiesFormat> propertiesFormat) {
         super("Properties are in bad format: " + String.join(", ", propertiesFormat.stream()
                 .map(PropertiesFormat::getName)
                 .toList()));
