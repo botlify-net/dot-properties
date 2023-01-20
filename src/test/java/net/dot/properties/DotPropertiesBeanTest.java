@@ -34,6 +34,9 @@ public class DotPropertiesBeanTest {
     @Property(name = "propertyZoneId", required = true)
     private ZoneId propertyZoneId;
 
+    @Property(name = "propertyLong", required = true)
+    private Long propertyLong;
+
     @Test
     public void testBean() throws NoJavaEnvFoundException, PropertiesAreMissingException, IOException, IllegalAccessException {
         DotProperties dotProperties = new DotProperties.Builder()
@@ -48,6 +51,8 @@ public class DotPropertiesBeanTest {
         assertEquals(LocalTime.of(12, 0, 0), propertyLocalTime);
         assertNotNull(propertyZoneId);
         assertEquals(ZoneId.of("Europe/Paris"), propertyZoneId);
+        assertNotNull(propertyLong);
+        assertEquals(42L, propertyLong);
     }
 
 }

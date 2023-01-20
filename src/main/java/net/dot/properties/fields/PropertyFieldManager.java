@@ -28,6 +28,7 @@ public abstract class PropertyFieldManager {
         fields.add(new InstantPropertyField());
         fields.add(new IntegerPropertyField());
         fields.add(new LocalTimePropertyField());
+        fields.add(new LongPropertyField());
         fields.add(new StringPropertyField());
         fields.add(new TimeZonePropertyField());
         fields.add(new ZonedDateTimePropertyField());
