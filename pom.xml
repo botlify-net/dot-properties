@@ -12,11 +12,17 @@
     <url>https://github.com/botlify-net/dot-properties</url>
     <description>Manage your properties file like a pro</description>
 
-
     <organization>
         <name>Botlify</name>
         <url>https://github.com/botlify-net</url>
     </organization>
+
+    <scm>
+        <connection>scm:github:https://github.com/botlify-net/dot-properties</connection>
+        <developerConnection>scm:github:https://github.com/botlify-net/dot-properties</developerConnection>
+        <url>https://github.com/botlify-io/dot-properties</url>
+        <tag>master</tag>
+    </scm>
 
     <licenses>
         <license>
