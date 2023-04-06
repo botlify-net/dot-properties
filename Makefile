@@ -1,31 +1,34 @@
 ##
-## DOT PROPERTIES, 2022
-## Dot Properties Makefile
+## OTOPILOT, 2022
+## Botlify Makefile
 ## File description:
-## Generic Makefile for Dot Properties
+## Generic Makefile for Botlify
 ##
+
+.PHONY: all test clean fclean install finstall re doc
 
 #=================================
 #	Commands
 #=================================
 
-.PHONY:				all \
-					install \
-					test \
-					finstall \
-					clean
+all:    finstall
 
-all:				install
-
-install:
-					mvn install
-
-finstall:
-					mvn install -DskipTests
+re:     clean all
 
 test:
-					mvn test
+		mvn test
 
 clean:
-					mvn clean
-					rm -rf target | true
+		mvn clean
+
+fclean:
+		rm -rf target
+
+install:
+		mvn install
+
+finstall:
+		mvn install -Dmaven.test.skip=true
+
+doc:
+		mvn javadoc:javadoc
