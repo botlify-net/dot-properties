@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * A manager for {@link PropertyField} instances.
+ */
 @Log4j2
 public abstract class PropertyFieldManager {
 
@@ -42,7 +45,19 @@ public abstract class PropertyFieldManager {
         fields.add(new ZoneIdPropertyField());
     }
 
-    public static void addPropertyField(@NotNull PropertyField field) {
+    /**
+     * Creates a new {@link PropertyFieldManager}.
+     * This constructor is private because this class not need to be instantiated.
+     */
+    private PropertyFieldManager() {
+        // Nothing to do.
+    }
+
+    /**
+     * Add a new {@link PropertyField} to the list of fields.
+     * @param field The field to add.
+     */
+    public static void addPropertyField(@NotNull final PropertyField field) {
         lock.lock();
         fields.add(field);
         lock.unlock();
@@ -51,9 +66,11 @@ public abstract class PropertyFieldManager {
     /**
      * Update the value of the field given in parameter with the value given in parameter.
      * This method will use the {@link PropertyField} of the field to parse the value.
+     * @param bean The bean to update.
      * @param field The field to update.
      * @param value The value to update the field with.
      * @return True if the field was updated, false otherwise.
+     * @throws IllegalAccessException If the field is final.
      */
     public static boolean parseField(@NotNull final Object bean,
                                      @NotNull final Field field,
@@ -71,7 +88,7 @@ public abstract class PropertyFieldManager {
             if (propertyField.getType() == field.getType()) {
                 try {
                     field.setAccessible(true);
-                    field.set(bean, propertyField.getValue(value));
+                    field.set(bean, propertyField.parseString(value));
                     return (true);
                 } catch (IllegalAccessException e) {
                     log.error("Unable to set field {} to value {}", field.getName(), value, e);

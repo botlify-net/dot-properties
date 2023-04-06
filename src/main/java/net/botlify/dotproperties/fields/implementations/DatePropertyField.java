@@ -7,12 +7,23 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * A property field for {@link Date} objects.
+ */
 public class DatePropertyField extends PropertyField {
 
+    /**
+     * Creates a new date property field.
+     */
     public DatePropertyField() {
         super(Date.class);
     }
 
+    /**
+     * Parses a string into a date.
+     * @param value The string to parse.
+     * @return The parsed date.
+     */
     @Override
     public @NotNull Object parseString(@NotNull final String value) {
         final SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
