@@ -1,7 +1,7 @@
 # Dot Properties
 
 [![Latest release](https://img.shields.io/github/release/botlify-net/dot-properties.svg)](https://github.com/botlify-net/dot-properties/releases/latest)
-[![Build Status](https://github.com/botlify-net/bright-data-api/workflows/Java%20CI/badge.svg?branch=master)](https://github.com/botlify-net/dot-properties/actions)
+[![Build Status](https://github.com/botlify-net/dot-properties/workflows/Java%20CI/badge.svg?branch=master)](https://github.com/botlify-net/dot-properties/actions)
 
 Du to the impossibility to modify the environment variables via Java.
 We need to use the properties file.
@@ -13,8 +13,8 @@ This module help you to manage your properties in your project.
 Add the dependency in your pom.xml:
 ```xml
 <dependency>
-    <groupId>net.botlify.brightdata</groupId>
-    <artifactId>bright-data-api</artifactId>
+    <groupId>net.botlify.dot-properties</groupId>
+    <artifactId>dot-properties</artifactId>
     <version>LATEST</version>
 </dependency>
 ```
