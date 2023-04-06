@@ -20,7 +20,7 @@
     <scm>
         <connection>scm:github:https://github.com/botlify-net/dot-properties</connection>
         <developerConnection>scm:github:https://github.com/botlify-net/dot-properties</developerConnection>
-        <url>https://github.com/botlify-io/dot-properties</url>
+        <url>https://github.com/botlify-net/dot-properties</url>
         <tag>master</tag>
     </scm>
 
