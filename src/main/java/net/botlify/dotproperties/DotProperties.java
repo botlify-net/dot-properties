@@ -49,6 +49,7 @@ public final class DotProperties {
     /**
      * Load the properties from the file and inject them into the bean.
      * This method should be called only once, otherwise an exception will be thrown.
+     * @param been The bean to inject the properties into.
      */
     public synchronized void load(@NotNull final Object been) {
         // Read the properties from the file.
@@ -254,6 +255,12 @@ public final class DotProperties {
         return (System.getProperty(property, defaultValue));
     }
 
+    /**
+     * Set the value of the property.
+     * @param property The property to set.
+     * @param value The value to set.
+     * @return {@code true} if the property was set, {@code false} otherwise.
+     */
     public boolean setProperty(@NotNull final String property,
                                @NotNull final String value) {
         String oldValue = System.getProperty(property);
