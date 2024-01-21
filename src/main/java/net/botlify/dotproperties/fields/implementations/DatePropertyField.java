@@ -10,7 +10,7 @@ import java.util.Date;
 /**
  * A property field for {@link Date} objects.
  */
-public class DatePropertyField extends PropertyField {
+public class DatePropertyField extends PropertyField<Date> {
 
   /**
    * Creates a new date property field.
@@ -26,7 +26,7 @@ public class DatePropertyField extends PropertyField {
    * @return The parsed date.
    */
   @Override
-  public @NotNull Object parseString(@NotNull final String value) {
+  public @NotNull Date parseFromString(@NotNull final String value) {
     final SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
     try {
       return (format.parse(value));

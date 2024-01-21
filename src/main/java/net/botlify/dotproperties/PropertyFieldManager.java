@@ -1,6 +1,7 @@
-package net.botlify.dotproperties.fields;
+package net.botlify.dotproperties;
 
 import lombok.extern.log4j.Log4j2;
+import net.botlify.dotproperties.fields.PropertyField;
 import net.botlify.dotproperties.fields.implementations.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,20 +15,21 @@ import java.util.concurrent.locks.ReentrantLock;
  * A manager for {@link PropertyField} instances.
  */
 @Log4j2
-public abstract class PropertyFieldManager {
+class PropertyFieldManager {
 
   /**
    * The list of fields that can be parsed.
    */
   @NotNull
-  private static final List<PropertyField> fields = new ArrayList<>();
+  private final List<PropertyField<?>> fields = new ArrayList<>();
 
-  /**
-   * The lock used to synchronize the access to the field list.
-   */
+  @NotNull
   private static final ReentrantLock lock = new ReentrantLock();
 
-  static {
+  /**
+   * Creates a new {@link PropertyFieldManager}.
+   */
+  PropertyFieldManager() {
     fields.add(new BooleanPropertyField());
     fields.add(new BytePropertyField());
     fields.add(new CharacterPropertyField());
@@ -46,22 +48,32 @@ public abstract class PropertyFieldManager {
   }
 
   /**
-   * Creates a new {@link PropertyFieldManager}.
-   * This constructor is private because this class not need to be instantiated.
-   */
-  private PropertyFieldManager() {
-    // Nothing to do.
-  }
-
-  /**
    * Add a new {@link PropertyField} to the list of fields.
    *
    * @param field The field to add.
    */
-  public static void addPropertyField(@NotNull final PropertyField field) {
+  public void addPropertyField(
+      @NotNull final PropertyField<?> field
+  ) {
     lock.lock();
     try {
       fields.add(field);
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  /**
+   * Add a list of {@link PropertyField} to the list of fields.
+   *
+   * @param list The list of fields to add.
+   */
+  public void addPropertyField(
+      @NotNull final List<@NotNull PropertyField<?>> list
+  ) {
+    lock.lock();
+    try {
+      fields.addAll(list);
     } finally {
       lock.unlock();
     }
@@ -74,12 +86,14 @@ public abstract class PropertyFieldManager {
    * @param bean  The bean to update.
    * @param field The field to update.
    * @param value The value to update the field with.
-   * @return True if the field was updated, false otherwise.
+   * @return {@code true} if the field was updated, {@code false} otherwise.
    * @throws IllegalAccessException If the field is final.
    */
-  public static boolean parseField(@NotNull final Object bean,
-                                   @NotNull final Field field,
-                                   @NotNull final String value) throws IllegalAccessException {
+  public boolean parseField(
+      @NotNull final Object bean,
+      @NotNull final Field field,
+      @NotNull final String value
+  ) throws IllegalAccessException {
     lock.lock();
     try {
       // Verify if the field is final.
@@ -90,11 +104,11 @@ public abstract class PropertyFieldManager {
       // Verify if the field is primitive.
       if (parsePrimitiveField(bean, field, value))
         return (true);
-      for (PropertyField propertyField : fields) {
+      for (PropertyField<?> propertyField : fields) {
         if (propertyField.getType() == field.getType()) {
           try {
             field.setAccessible(true);
-            field.set(bean, propertyField.parseString(value));
+            field.set(bean, propertyField.parseFromString(value));
             return (true);
           } catch (IllegalAccessException e) {
             log.error("Unable to set field {} to value {}", field.getName(), value, e);
@@ -119,9 +133,11 @@ public abstract class PropertyFieldManager {
    * @return True if the field was updated, false otherwise.
    * @throws IllegalAccessException If the field is not accessible.
    */
-  private static boolean parsePrimitiveField(@NotNull final Object bean,
-                                             @NotNull final Field field,
-                                             @NotNull final String value) throws IllegalAccessException {
+  private boolean parsePrimitiveField(
+      @NotNull final Object bean,
+      @NotNull final Field field,
+      @NotNull final String value
+  ) throws IllegalAccessException {
     if (!field.getType().isPrimitive() && !field.getType().isEnum())
       return (false);
     field.setAccessible(true);
@@ -153,11 +169,11 @@ public abstract class PropertyFieldManager {
    *
    * @return A list of all the fields that are supported by the manager.
    */
-  public static @NotNull List<Class<?>> getImplementedClassList() {
+  public @NotNull List<Class<?>> getImplementedClassList() {
     List<Class<?>> classes = new ArrayList<>();
     lock.lock();
     try {
-      for (PropertyField field : fields) {
+      for (PropertyField<?> field : this.fields) {
         classes.add(field.getType());
       }
     } finally {

@@ -8,7 +8,7 @@ import java.util.TimeZone;
 /**
  * A {@link PropertyField} for {@link TimeZone} values.
  */
-public class TimeZonePropertyField extends PropertyField {
+public class TimeZonePropertyField extends PropertyField<TimeZone> {
 
   /**
    * Creates a new {@link TimeZonePropertyField}.
@@ -24,7 +24,7 @@ public class TimeZonePropertyField extends PropertyField {
    * @return The parsed {@link TimeZone}.
    */
   @Override
-  public @NotNull TimeZone parseString(@NotNull String value) {
+  public @NotNull TimeZone parseFromString(@NotNull String value) {
     return (TimeZone.getTimeZone(value));
   }
 }

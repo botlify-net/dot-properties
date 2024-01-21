@@ -8,7 +8,7 @@ import java.time.Instant;
 /**
  * A property field for {@link Instant} values.
  */
-public class InstantPropertyField extends PropertyField {
+public class InstantPropertyField extends PropertyField<Instant> {
 
   /**
    * Creates a new {@link InstantPropertyField}.
@@ -24,7 +24,7 @@ public class InstantPropertyField extends PropertyField {
    * @return The parsed {@link Instant}.
    */
   @Override
-  public @NotNull Object parseString(@NotNull final String value) {
+  public @NotNull Instant parseFromString(@NotNull final String value) {
     return (Instant.parse(value));
   }
 

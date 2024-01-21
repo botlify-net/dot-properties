@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
  * Exception thrown when no Java environment is found but
  * a configuration requires it.
  */
+@Getter
 public class NoJavaEnvFoundException extends RuntimeException {
 
 
@@ -15,7 +16,6 @@ public class NoJavaEnvFoundException extends RuntimeException {
    * The configuration that is invalid.
    */
   @NotNull
-  @Getter
   private final DotPropertiesConfig config;
 
   /**

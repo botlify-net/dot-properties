@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A {@link PropertyField} for {@link Character} values.
  */
-public class FloatPropertyField extends PropertyField {
+public class FloatPropertyField extends PropertyField<Float> {
 
   /**
    * Creates a new {@link FloatPropertyField}.
@@ -22,7 +22,7 @@ public class FloatPropertyField extends PropertyField {
    * @return The parsed {@link Float}.
    */
   @Override
-  public @NotNull Object parseString(@NotNull final String value) {
+  public @NotNull Float parseFromString(@NotNull final String value) {
     return (Float.parseFloat(value));
   }
 }

@@ -8,7 +8,7 @@ import java.time.ZoneId;
 /**
  * A {@link PropertyField} for {@link ZoneId} values.
  */
-public class ZoneIdPropertyField extends PropertyField {
+public class ZoneIdPropertyField extends PropertyField<ZoneId> {
 
   /**
    * Creates a new {@link ZoneIdPropertyField}.
@@ -24,7 +24,7 @@ public class ZoneIdPropertyField extends PropertyField {
    * @return The parsed {@link ZoneId}.
    */
   @Override
-  public @NotNull ZoneId parseString(@NotNull String value) {
+  public @NotNull ZoneId parseFromString(@NotNull String value) {
     return (ZoneId.of(value));
   }
 

@@ -7,13 +7,13 @@ import org.jetbrains.annotations.NotNull;
 /**
  * This exception is thrown when the configuration is invalid.
  */
+@Getter
 public class InvalidConfigException extends RuntimeException {
 
   /**
    * The configuration that is invalid.
    */
   @NotNull
-  @Getter
   private final DotPropertiesConfig config;
 
   /**

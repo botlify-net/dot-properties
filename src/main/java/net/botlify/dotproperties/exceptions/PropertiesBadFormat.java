@@ -8,13 +8,13 @@ import java.util.List;
 /**
  * Thrown when a property is in bad format.
  */
+@Getter
 public class PropertiesBadFormat extends RuntimeException {
 
   /**
    * The properties that are in bad format.
    */
   @NotNull
-  @Getter
   private final List<String> propertiesInBadFormat;
 
   /**

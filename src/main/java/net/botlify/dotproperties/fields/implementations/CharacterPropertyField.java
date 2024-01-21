@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A {@link PropertyField} for {@link Character} values.
  */
-public class CharacterPropertyField extends PropertyField {
+public class CharacterPropertyField extends PropertyField<Character> {
 
   /**
    * Creates a new {@link CharacterPropertyField}.
@@ -22,7 +22,7 @@ public class CharacterPropertyField extends PropertyField {
    * @return The parsed {@link Character}.
    */
   @Override
-  public @NotNull Object parseString(@NotNull final String value) {
+  public @NotNull Character parseFromString(@NotNull final String value) {
     if (value.length() != 1)
       throw (new IllegalArgumentException("CharacterPropertyField can only parse strings with a length of 1"));
     return (value.charAt(0));

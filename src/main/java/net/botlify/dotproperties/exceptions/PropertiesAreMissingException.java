@@ -8,13 +8,13 @@ import java.util.List;
 /**
  * Thrown when a property is missing.
  */
+@Getter
 public class PropertiesAreMissingException extends RuntimeException {
 
   /**
    * The properties that are missing.
    */
   @NotNull
-  @Getter
   private final List<String> properties;
 
   /**

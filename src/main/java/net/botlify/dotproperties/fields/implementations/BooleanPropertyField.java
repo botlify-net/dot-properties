@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A property field for booleans.
  */
-public class BooleanPropertyField extends PropertyField {
+public class BooleanPropertyField extends PropertyField<Boolean> {
 
   /**
    * Creates a new boolean property field.
@@ -22,7 +22,7 @@ public class BooleanPropertyField extends PropertyField {
    * @return The parsed boolean.
    */
   @Override
-  public @NotNull Object parseString(@NotNull final String value) {
+  public @NotNull Boolean parseFromString(@NotNull final String value) {
     return (Boolean.parseBoolean(value));
   }
 

@@ -6,20 +6,20 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A {@link PropertyField} is a field that can be parsed from a {@link String}.
  */
-public abstract class PropertyField {
+@Getter
+public abstract class PropertyField<T> {
 
   /**
    * The type of the field.
    */
-  @Getter
-  private final Class<?> type;
+  private final Class<T> type;
 
   /**
    * Creates a new {@link PropertyField}.
    *
    * @param type The type of the field.
    */
-  public PropertyField(@NotNull final Class<?> type) {
+  public PropertyField(@NotNull final Class<T> type) {
     this.type = type;
   }
 
@@ -29,6 +29,6 @@ public abstract class PropertyField {
    * @param value The {@link String} to parse.
    * @return The parsed {@link Object}.
    */
-  public abstract @NotNull Object parseString(@NotNull final String value);
+  public abstract @NotNull T parseFromString(@NotNull final String value);
 
 }

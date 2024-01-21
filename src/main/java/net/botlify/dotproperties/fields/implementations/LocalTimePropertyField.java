@@ -8,7 +8,7 @@ import java.time.LocalTime;
 /**
  * A {@link PropertyField} for {@link LocalTime}.
  */
-public class LocalTimePropertyField extends PropertyField {
+public class LocalTimePropertyField extends PropertyField<LocalTime> {
 
   /**
    * Creates a new {@link LocalTimePropertyField}.
@@ -24,7 +24,7 @@ public class LocalTimePropertyField extends PropertyField {
    * @return The parsed {@link LocalTime}.
    */
   @Override
-  public @NotNull Object parseString(@NotNull String value) {
+  public @NotNull LocalTime parseFromString(@NotNull String value) {
     return (LocalTime.parse(value));
   }
 }

@@ -8,7 +8,7 @@ import java.io.File;
 /**
  * A {@link PropertyField} for {@link File} values.
  */
-public class FilePropertyField extends PropertyField {
+public class FilePropertyField extends PropertyField<File> {
 
   /**
    * Creates a new {@link FilePropertyField}.
@@ -24,7 +24,7 @@ public class FilePropertyField extends PropertyField {
    * @return The parsed {@link File}.
    */
   @Override
-  public @NotNull Object parseString(@NotNull String value) {
+  public @NotNull File parseFromString(@NotNull String value) {
     return new File(value);
   }
 }

@@ -4,8 +4,12 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import net.botlify.dotproperties.fields.PropertyField;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Builder for {@link DotProperties}.
@@ -41,6 +45,9 @@ public final class DotPropertiesConfig {
    */
   @Getter(AccessLevel.PACKAGE)
   private boolean useFileSystemFolder = true;
+
+  @Getter(AccessLevel.PACKAGE)
+  private @NotNull List<@NotNull PropertyField<?>> propertyFields = new ArrayList<>(0);
 
   /**
    * Constructor of the configuration.
@@ -107,6 +114,15 @@ public final class DotPropertiesConfig {
   public @NotNull DotPropertiesConfig setUseFileSystemFolder(final boolean useFileSystemFolder) {
     this.useFileSystemFolder = useFileSystemFolder;
     return (this);
+  }
+
+  public @NotNull DotPropertiesConfig addPropertyField(@NotNull final PropertyField<?> propertyField) {
+    this.propertyFields.add(propertyField);
+    return (this);
+  }
+
+  public @NotNull DotProperties build() {
+    return (new DotProperties(this));
   }
 
 }

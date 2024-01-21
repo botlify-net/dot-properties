@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A {@link PropertyField} for {@link String}.
  */
-public class StringPropertyField extends PropertyField {
+public class StringPropertyField extends PropertyField<String> {
 
   /**
    * Creates a new {@link StringPropertyField}.
@@ -22,7 +22,7 @@ public class StringPropertyField extends PropertyField {
    * @return The parsed {@link String}.
    */
   @Override
-  public @NotNull Object parseString(@NotNull final String value) {
+  public @NotNull String parseFromString(@NotNull final String value) {
     return (value);
   }
 

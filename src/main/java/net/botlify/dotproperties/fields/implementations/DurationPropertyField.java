@@ -8,7 +8,7 @@ import java.time.Duration;
 /**
  * A {@link PropertyField} for {@link Duration} values.
  */
-public class DurationPropertyField extends PropertyField {
+public class DurationPropertyField extends PropertyField<Duration> {
 
   /**
    * Creates a new {@link DurationPropertyField}.
@@ -24,7 +24,7 @@ public class DurationPropertyField extends PropertyField {
    * @return The parsed {@link Duration}.
    */
   @Override
-  public @NotNull Object parseString(@NotNull final String value) {
+  public @NotNull Duration parseFromString(@NotNull final String value) {
     return (Duration.parse(value));
   }
 

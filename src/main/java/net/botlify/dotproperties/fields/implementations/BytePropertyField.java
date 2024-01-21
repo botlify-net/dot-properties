@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A property field that can parse a {@link Byte} value.
  */
-public class BytePropertyField extends PropertyField {
+public class BytePropertyField extends PropertyField<Byte> {
 
   /**
    * Creates a new instance.
@@ -22,7 +22,7 @@ public class BytePropertyField extends PropertyField {
    * @return The parsed byte.
    */
   @Override
-  public @NotNull Object parseString(@NotNull String value) {
+  public @NotNull Byte parseFromString(@NotNull String value) {
     return (Byte.parseByte(value));
   }
 }

@@ -8,15 +8,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DotPropertiesRegexTest {
 
-    @Property(name = "propertyLong", regex = "^[a-z]+$", required = true)
-    public String test;
+  @Property(name = "propertyLong", regex = "^[a-z]+$", required = true)
+  public String test;
 
-    @Test
-    public void load() {
-        final DotPropertiesConfig config = new DotPropertiesConfig();
-        final DotProperties dotProperties = new DotProperties(config);
-        assertThrows(PropertiesBadFormat.class, () -> dotProperties.load(this));
+  @Test
+  public void load() {
+    final DotPropertiesConfig config = new DotPropertiesConfig();
+    final DotProperties dotProperties = new DotProperties(config);
+    assertThrows(PropertiesBadFormat.class, () -> dotProperties.load(this));
 
-    }
+  }
 
 }

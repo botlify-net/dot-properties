@@ -8,7 +8,7 @@ import java.time.ZonedDateTime;
 /**
  * A {@link PropertyField} for {@link ZonedDateTime}.
  */
-public class ZonedDateTimePropertyField extends PropertyField {
+public class ZonedDateTimePropertyField extends PropertyField<ZonedDateTime> {
 
   /**
    * Creates a new {@link ZonedDateTimePropertyField}.
@@ -23,7 +23,7 @@ public class ZonedDateTimePropertyField extends PropertyField {
    * @param value The {@link String} to parse.
    * @return The parsed {@link ZonedDateTime}.
    */
-  public @NotNull Object parseString(@NotNull final String value) {
+  public @NotNull ZonedDateTime parseFromString(@NotNull final String value) {
     return (ZonedDateTime.parse(value));
   }
 

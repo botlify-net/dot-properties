@@ -4,7 +4,6 @@ import lombok.extern.log4j.Log4j2;
 import net.botlify.dotproperties.annotations.Property;
 import net.botlify.dotproperties.exceptions.PropertiesAreMissingException;
 import net.botlify.dotproperties.exceptions.PropertiesBadFormat;
-import net.botlify.dotproperties.fields.PropertyFieldManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +27,7 @@ public final class DotProperties {
   /**
    * Load a new dot properties file with the default config.
    */
-  public DotProperties() {
+  DotProperties() {
     this(new DotPropertiesConfig());
   }
 
@@ -37,7 +36,7 @@ public final class DotProperties {
    *
    * @param config The config object to use for this DotProperties instance.
    */
-  public DotProperties(@NotNull final DotPropertiesConfig config) {
+  DotProperties(@NotNull final DotPropertiesConfig config) {
     log.trace("Initializing new DotProperties");
     this.config = config;
   }
@@ -47,8 +46,9 @@ public final class DotProperties {
    * This method should be called only once, otherwise an exception will be thrown.
    *
    * @param been The bean to inject the properties into.
+   * @return The instance of the class {@link DotProperties}.
    */
-  public synchronized void load(@NotNull final Object been) {
+  public synchronized DotProperties load(@NotNull final Object been) {
     // Read the properties from the file.
     final Properties properties = FileUtils.getProperties(been, config);
     // Set the properties in the system.
@@ -58,6 +58,7 @@ public final class DotProperties {
     setAllInBeen(been, properties, propertiesElements);
     // Verify the regex of the properties.
     verifyPropertiesRegex(propertiesElements);
+    return (this);
   }
 
     /*
@@ -85,9 +86,13 @@ public final class DotProperties {
    */
   private void setAllInBeen(@NotNull final Object been,
                             @NotNull final Properties properties,
-                            @NotNull Map<Field, Property> propertiesElements) {
-    // This list store all the missing properties.
+                            @NotNull Map<@NotNull Field, Property> propertiesElements) {
+    // This list stores all the missing properties.
     final List<String> missingProperties = new ArrayList<>();
+
+    final PropertyFieldManager propertyFieldManager = new PropertyFieldManager();
+    propertyFieldManager.addPropertyField(config.getPropertyFields());
+
     propertiesElements.forEach((field, propElem) -> {
       final String value = properties.getProperty(propElem.name());
       // Check if the value is required.
@@ -99,7 +104,7 @@ public final class DotProperties {
         return;
       // Update field in been
       try {
-        PropertyFieldManager.parseField(been, field, value);
+        propertyFieldManager.parseField(been, field, value);
       } catch (IllegalAccessException e) {
         throw new RuntimeException(e);
       }
@@ -134,95 +139,14 @@ public final class DotProperties {
       throw (new PropertiesBadFormat(inBadFormat));
   }
 
-    /*
-    private void getRequiredFromBeen(@NotNull final Object been) {
-        // get PropertiesElement annotation from bean class
-        log.trace("Getting PropertiesElement annotation from bean class: {}",
-                been.getClass().getName());
-        final Field[] fields = been.getClass().getDeclaredFields();
-        log.trace("Found {} fields in {}", fields.length, been.getClass().getName());
-        final List<Property> propertiesElements = new ArrayList<>();
-        for (Field field : fields) {
-            for (Annotation annotation : field.getAnnotations()) {
-                if (!(annotation instanceof Property))
-                    continue;
-                propertiesElements.add((Property) annotation);
-            }
-        }
-        if (propertiesElements.size() == 0) {
-            log.trace("No properties element found in bean, skipping bean parsing");
-            return;
-        }
-        log.trace("Found {} properties element in bean", propertiesElements.size());
-        for (Property propElem : propertiesElements) {
-            if (!propElem.required())
-                continue;
-            PropertiesFormat propertiesFormat = new PropertiesFormat(propElem.name());
-            if (propElem.regex().length != 0)
-                propertiesFormat.setPattern(Pattern.compile(propElem.regex()[0]));
-            if (propElem.format().length != 0)
-                propertiesFormat.setPattern(Pattern.compile(propElem.format()[0].getRegex()));
-            if (getRequires().contains(propertiesFormat)) {
-                log.warn("Property {} already exists in requires list", propertiesFormat.getName());
-                continue;
-            }
-            getRequires().add(propertiesFormat);
-            log.trace("Property {} added to requires list", propertiesFormat.getName());
-        }
-    }
-    */
-  // private void updateAnnotationInBeen(@NotNull final Object been,
-  //                                     @NotNull final List<>)
-
-  // private void updateAnnotationInBeen(@NotNull final Object been,
-  //                                     @NotNull final String key,
-  //                                     @NotNull final String value) throws IllegalAccessException {
-  //     final Map<Field, Property> fieldPropertiesElementMap = getPropertiesElements();
-  //     for (Field field : fieldPropertiesElementMap.keySet()) {
-  //         Property propertiesElement = fieldPropertiesElementMap.get(field);
-  //         if (!propertiesElement.name().equals(key))
-  //             continue;
-  //         log.trace("Updating field {} in bean...", field.getName());
-  //         boolean result = PropertyFieldManager.parseField(been, field, value);
-  //         if (!result)
-  //             log.warn("Unable to parse field {} in bean {}", field.getName(),
-  //                     been.getClass().getName());
-  //         else
-  //             log.trace("Field {} in bean {} updated with value {}", field.getName(),
-  //                     been.getClass().getName(), value);
-  //     }
-  // }
-
-  // private void checkIfAllPropertiesExist(@NotNull final Properties properties) {
-  //     if (config.getRequires().isEmpty())
-  //         return;
-  //     List<String> notSetProperties = new ArrayList<>();
-  //     for (PropertiesFormat propertyFormat : config.getRequires()) {
-  //         String value = properties.getProperty(propertyFormat.getName());
-  //         if (value == null || value.isEmpty()) notSetProperties.add(propertyFormat.getName());
-  //     }
-  //     if (!notSetProperties.isEmpty())
-  //         throw new RuntimeException(new PropertiesAreMissingException(notSetProperties));
-  // }
-
-  // private void checkAllFormats(Properties properties) {
-  //     List<PropertiesFormat> propertiesFormats = new ArrayList<>();
-  //     for (PropertiesFormat propertyFormat : config.getRequires()) {
-  //         String value = properties.getProperty(propertyFormat.getName());
-  //         if (value == null || value.isEmpty()) continue;
-  //         if (!propertyFormat.verifyFormat(value))
-  //             propertiesFormats.add(propertyFormat);
-  //     }
-  //     if (!propertiesFormats.isEmpty())
-  //         throw (new RuntimeException(new PropertiesBadFormat(propertiesFormats)));
-  // }
-
   /**
    * Return the map of all fields annotated with {@link Property}.
    *
    * @return The map of all fields annotated with {@link Property}.
    */
-  private @NotNull Map<Field, Property> getPropertiesElements(@NotNull final Object been) {
+  private @NotNull Map<@NotNull Field, Property> getPropertiesElements(
+      @NotNull final Object been
+  ) {
     final Map<Field, Property> propertiesElements = new HashMap<>();
     for (Field field : been.getClass().getDeclaredFields()) {
       for (Annotation annotation : field.getAnnotations()) {
@@ -253,8 +177,10 @@ public final class DotProperties {
    * @param defaultValue The default value to return if the property is not set.
    * @return The value of the property or the default value if the property is not set.
    */
-  public @Nullable String getProperty(@NotNull final String property,
-                                      @Nullable final String defaultValue) {
+  public @Nullable String getProperty(
+      @NotNull final String property,
+      @Nullable final String defaultValue
+  ) {
     return (System.getProperty(property, defaultValue));
   }
 
@@ -263,10 +189,12 @@ public final class DotProperties {
    *
    * @param property The property to set.
    * @param value    The value to set.
-   * @return {@code true} if the property was set, {@code false} otherwise.
+   * @return {@code true} if the property was changed, {@code false} otherwise.
    */
-  public boolean setProperty(@NotNull final String property,
-                             @NotNull final String value) {
+  public boolean setProperty(
+      @NotNull final String property,
+      @NotNull final String value
+  ) {
     String oldValue = System.getProperty(property);
     if (oldValue == null || oldValue.equals(value))
       return (false);

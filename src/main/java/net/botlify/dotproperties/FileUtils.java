@@ -6,6 +6,7 @@ import net.botlify.dotproperties.exceptions.InvalidConfigException;
 import net.botlify.dotproperties.exceptions.NoJavaEnvFoundException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -27,8 +28,10 @@ abstract class FileUtils {
    * @return The properties.
    */
   @SneakyThrows
-  public static @NotNull Properties getProperties(@NotNull final Object been,
-                                                  @NotNull final DotPropertiesConfig config) {
+  public static @NotNull Properties getProperties(
+      @NotNull final Object been,
+      @NotNull final DotPropertiesConfig config
+  ) {
     if (!config.isUseFileSystemFolder() && !config.isUseResourceFolder())
       throw (new InvalidConfigException("Both use file system folder and use resource folder are not set.",
           config));
@@ -42,7 +45,7 @@ abstract class FileUtils {
           return (tmp);
       }
     }
-    // Search in resource folder.
+    // Search in the resource folder.
     if (config.isUseResourceFolder()) {
       for (String name : fileNames) {
         log.trace("Searching properties file in resource folder: {}", name);
@@ -60,7 +63,9 @@ abstract class FileUtils {
    * @param config The configuration.
    * @return The {@link List} of file names.
    */
-  private static @NotNull List<String> getFileName(@NotNull final DotPropertiesConfig config) {
+  private static @NotNull @Unmodifiable List<String> getFileName(
+      @NotNull final DotPropertiesConfig config
+  ) {
     if (config.getFileName() != null && config.getJavaEnv() != null)
       throw new InvalidConfigException("Both file name and java environment are set.", config);
     if (config.getFileName() == null && config.getJavaEnv() == null)
@@ -79,7 +84,9 @@ abstract class FileUtils {
    * @param path The path to the file.
    * @return The properties.
    */
-  private static @Nullable Properties readPropertiesFromFile(@NotNull final String path) {
+  private static @Nullable Properties readPropertiesFromFile(
+      @NotNull final String path
+  ) {
     try (FileInputStream resource = new FileInputStream(path)) {
       final Properties properties = new Properties();
       properties.load(resource);
@@ -96,8 +103,10 @@ abstract class FileUtils {
    * @param path The path to the file.
    * @return The properties.
    */
-  private static @Nullable Properties readPropertiesFromResource(@NotNull final Object been,
-                                                                 @NotNull final String path) {
+  private static @Nullable Properties readPropertiesFromResource(
+      @NotNull final Object been,
+      @NotNull final String path
+  ) {
     try (InputStream inputStream = been.getClass().getClassLoader().getResourceAsStream(path)) {
       final Properties properties = new Properties();
       properties.load(inputStream);

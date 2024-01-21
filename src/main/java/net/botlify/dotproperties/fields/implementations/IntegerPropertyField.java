@@ -3,10 +3,12 @@ package net.botlify.dotproperties.fields.implementations;
 import net.botlify.dotproperties.fields.PropertyField;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.Instant;
+
 /**
  * A {@link PropertyField} for {@link Integer} values.
  */
-public class IntegerPropertyField extends PropertyField {
+public class IntegerPropertyField extends PropertyField<Integer> {
 
   /**
    * Creates a new {@link IntegerPropertyField}.
@@ -22,7 +24,7 @@ public class IntegerPropertyField extends PropertyField {
    * @return The parsed {@link Integer}.
    */
   @Override
-  public @NotNull Object parseString(@NotNull final String value) {
+  public @NotNull Integer parseFromString(@NotNull final String value) {
     return (Integer.parseInt(value));
   }
 }
