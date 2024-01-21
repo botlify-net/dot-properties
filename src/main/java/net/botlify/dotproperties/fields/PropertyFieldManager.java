@@ -23,7 +23,7 @@ public abstract class PropertyFieldManager {
   private static final List<PropertyField> fields = new ArrayList<>();
 
   /**
-   * The lock used to synchronize the access to the fields list.
+   * The lock used to synchronize the access to the field list.
    */
   private static final ReentrantLock lock = new ReentrantLock();
 
@@ -60,8 +60,11 @@ public abstract class PropertyFieldManager {
    */
   public static void addPropertyField(@NotNull final PropertyField field) {
     lock.lock();
-    fields.add(field);
-    lock.unlock();
+    try {
+      fields.add(field);
+    } finally {
+      lock.unlock();
+    }
   }
 
   /**
@@ -78,27 +81,30 @@ public abstract class PropertyFieldManager {
                                    @NotNull final Field field,
                                    @NotNull final String value) throws IllegalAccessException {
     lock.lock();
-    // Verify if the field is final.
-    if ((field.getModifiers() & Modifier.FINAL) == Modifier.FINAL) {
-      log.warn("Field {} is final, skipping updating", field.getName());
-      return (false);
-    }
-    // Verify if the field is primitive.
-    if (parsePrimitiveField(bean, field, value))
-      return (true);
-    for (PropertyField propertyField : fields) {
-      if (propertyField.getType() == field.getType()) {
-        try {
-          field.setAccessible(true);
-          field.set(bean, propertyField.parseString(value));
-          return (true);
-        } catch (IllegalAccessException e) {
-          log.error("Unable to set field {} to value {}", field.getName(), value, e);
-          return (false);
+    try {
+      // Verify if the field is final.
+      if ((field.getModifiers() & Modifier.FINAL) == Modifier.FINAL) {
+        log.warn("Field {} is final, skipping updating", field.getName());
+        return (false);
+      }
+      // Verify if the field is primitive.
+      if (parsePrimitiveField(bean, field, value))
+        return (true);
+      for (PropertyField propertyField : fields) {
+        if (propertyField.getType() == field.getType()) {
+          try {
+            field.setAccessible(true);
+            field.set(bean, propertyField.parseString(value));
+            return (true);
+          } catch (IllegalAccessException e) {
+            log.error("Unable to set field {} to value {}", field.getName(), value, e);
+            return (false);
+          }
         }
       }
+    } finally {
+      lock.unlock();
     }
-    lock.unlock();
     log.warn("Unsupported field type {} for field {}",
         field.getType().getName(), field.getName());
     return (false);
@@ -150,9 +156,13 @@ public abstract class PropertyFieldManager {
   public static @NotNull List<Class<?>> getImplementedClassList() {
     List<Class<?>> classes = new ArrayList<>();
     lock.lock();
-    for (PropertyField field : fields)
-      classes.add(field.getType());
-    lock.unlock();
+    try {
+      for (PropertyField field : fields) {
+        classes.add(field.getType());
+      }
+    } finally {
+      lock.unlock();
+    }
     return (classes);
   }
 
