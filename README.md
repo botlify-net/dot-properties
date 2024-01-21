@@ -49,7 +49,7 @@ In the following case the DotProperties will try to load properties file in the 
 
 ````bash
 .${JAVA_PROPS}.properties # in the file system
-.properties.${JAVA_PROPS} # in the file directory
+.properties.${JAVA_PROPS} # in the file system
 .${JAVA_PROPS}.properties # in the resource directory
 .properties.${JAVA_PROPS} # in the resource directory
 ````
