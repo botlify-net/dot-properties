@@ -8,20 +8,21 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LongPropertyField extends PropertyField {
 
-    /**
-     * Creates a new {@link LongPropertyField}.
-     */
-    public LongPropertyField() {
-        super(Long.class);
-    }
+  /**
+   * Creates a new {@link LongPropertyField}.
+   */
+  public LongPropertyField() {
+    super(Long.class);
+  }
 
-    /**
-     * Parses a {@link String} into a {@link Long}.
-     * @param value The {@link String} to parse.
-     * @return The parsed {@link Long}.
-     */
-    @Override
-    public @NotNull Object parseString(@NotNull String value) {
-        return (Long.parseLong(value));
-    }
+  /**
+   * Parses a {@link String} into a {@link Long}.
+   *
+   * @param value The {@link String} to parse.
+   * @return The parsed {@link Long}.
+   */
+  @Override
+  public @NotNull Object parseString(@NotNull String value) {
+    return (Long.parseLong(value));
+  }
 }

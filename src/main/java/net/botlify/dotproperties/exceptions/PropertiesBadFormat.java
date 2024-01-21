@@ -10,19 +10,21 @@ import java.util.List;
  */
 public class PropertiesBadFormat extends RuntimeException {
 
-    /**
-     * The properties that are in bad format.
-     */
-    @NotNull @Getter
-    private final List<String> propertiesInBadFormat;
+  /**
+   * The properties that are in bad format.
+   */
+  @NotNull
+  @Getter
+  private final List<String> propertiesInBadFormat;
 
-    /**
-     * Constructor of the exception with the properties that are in bad format.
-     * @param propertiesFormat The properties that are in bad format.
-     */
-    public PropertiesBadFormat(@NotNull final List<String> propertiesFormat) {
-        super("Properties are in bad format: " + propertiesFormat);
-        this.propertiesInBadFormat = propertiesFormat;
-    }
+  /**
+   * Constructor of the exception with the properties that are in bad format.
+   *
+   * @param propertiesFormat The properties that are in bad format.
+   */
+  public PropertiesBadFormat(@NotNull final List<String> propertiesFormat) {
+    super("Properties are in bad format: " + propertiesFormat);
+    this.propertiesInBadFormat = propertiesFormat;
+  }
 
 }

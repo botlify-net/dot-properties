@@ -10,20 +10,21 @@ import java.time.ZonedDateTime;
  */
 public class ZonedDateTimePropertyField extends PropertyField {
 
-    /**
-     * Creates a new {@link ZonedDateTimePropertyField}.
-     */
-    public ZonedDateTimePropertyField() {
-        super(ZonedDateTime.class);
-    }
+  /**
+   * Creates a new {@link ZonedDateTimePropertyField}.
+   */
+  public ZonedDateTimePropertyField() {
+    super(ZonedDateTime.class);
+  }
 
-    /**
-     * Parses a {@link String} into a {@link ZonedDateTime}.
-     * @param value The {@link String} to parse.
-     * @return The parsed {@link ZonedDateTime}.
-     */
-    public @NotNull Object parseString(@NotNull final String value) {
-        return (ZonedDateTime.parse(value));
-    }
+  /**
+   * Parses a {@link String} into a {@link ZonedDateTime}.
+   *
+   * @param value The {@link String} to parse.
+   * @return The parsed {@link ZonedDateTime}.
+   */
+  public @NotNull Object parseString(@NotNull final String value) {
+    return (ZonedDateTime.parse(value));
+  }
 
 }

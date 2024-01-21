@@ -9,21 +9,23 @@ import org.jetbrains.annotations.NotNull;
  */
 public class InvalidConfigException extends RuntimeException {
 
-    /**
-     * The configuration that is invalid.
-     */
-    @NotNull @Getter
-    private final DotPropertiesConfig config;
+  /**
+   * The configuration that is invalid.
+   */
+  @NotNull
+  @Getter
+  private final DotPropertiesConfig config;
 
-    /**
-     * Constructor of the exception with the message and the configuration.
-     * @param message The message.
-     * @param config The configuration that is invalid.
-     */
-    public InvalidConfigException(@NotNull final String message,
-                                  @NotNull final DotPropertiesConfig config) {
-        super(message);
-        this.config = config;
-    }
+  /**
+   * Constructor of the exception with the message and the configuration.
+   *
+   * @param message The message.
+   * @param config  The configuration that is invalid.
+   */
+  public InvalidConfigException(@NotNull final String message,
+                                @NotNull final DotPropertiesConfig config) {
+    super(message);
+    this.config = config;
+  }
 
 }

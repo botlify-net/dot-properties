@@ -8,25 +8,27 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class PropertyField {
 
-    /**
-     * The type of the field.
-     */
-    @Getter
-    private final Class<?> type;
+  /**
+   * The type of the field.
+   */
+  @Getter
+  private final Class<?> type;
 
-    /**
-     * Creates a new {@link PropertyField}.
-     * @param type The type of the field.
-     */
-    public PropertyField(@NotNull final Class<?> type) {
-        this.type = type;
-    }
+  /**
+   * Creates a new {@link PropertyField}.
+   *
+   * @param type The type of the field.
+   */
+  public PropertyField(@NotNull final Class<?> type) {
+    this.type = type;
+  }
 
-    /**
-     * Parses a {@link String} into a value.
-     * @param value The {@link String} to parse.
-     * @return The parsed {@link Object}.
-     */
-    public abstract @NotNull Object parseString(@NotNull final String value);
+  /**
+   * Parses a {@link String} into a value.
+   *
+   * @param value The {@link String} to parse.
+   * @return The parsed {@link Object}.
+   */
+  public abstract @NotNull Object parseString(@NotNull final String value);
 
 }

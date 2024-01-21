@@ -8,21 +8,22 @@ import org.jetbrains.annotations.NotNull;
  */
 public class StringPropertyField extends PropertyField {
 
-    /**
-     * Creates a new {@link StringPropertyField}.
-     */
-    public StringPropertyField() {
-        super(String.class);
-    }
+  /**
+   * Creates a new {@link StringPropertyField}.
+   */
+  public StringPropertyField() {
+    super(String.class);
+  }
 
-    /**
-     * Parses a {@link String} into a {@link String}.
-     * @param value The {@link String} to parse.
-     * @return The parsed {@link String}.
-     */
-    @Override
-    public @NotNull Object parseString(@NotNull final String value) {
-        return (value);
-    }
+  /**
+   * Parses a {@link String} into a {@link String}.
+   *
+   * @param value The {@link String} to parse.
+   * @return The parsed {@link String}.
+   */
+  @Override
+  public @NotNull Object parseString(@NotNull final String value) {
+    return (value);
+  }
 
 }

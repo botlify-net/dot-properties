@@ -8,20 +8,21 @@ import org.jetbrains.annotations.NotNull;
  */
 public class FloatPropertyField extends PropertyField {
 
-    /**
-     * Creates a new {@link FloatPropertyField}.
-     */
-    public FloatPropertyField() {
-        super(Float.class);
-    }
+  /**
+   * Creates a new {@link FloatPropertyField}.
+   */
+  public FloatPropertyField() {
+    super(Float.class);
+  }
 
-    /**
-     * Parses a {@link String} into a {@link Float}.
-     * @param value The {@link String} to parse.
-     * @return The parsed {@link Float}.
-     */
-    @Override
-    public @NotNull Object parseString(@NotNull final String value) {
-        return (Float.parseFloat(value));
-    }
+  /**
+   * Parses a {@link String} into a {@link Float}.
+   *
+   * @param value The {@link String} to parse.
+   * @return The parsed {@link Float}.
+   */
+  @Override
+  public @NotNull Object parseString(@NotNull final String value) {
+    return (Float.parseFloat(value));
+  }
 }
