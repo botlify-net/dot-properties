@@ -10,21 +10,22 @@ import java.time.Instant;
  */
 public class InstantPropertyField extends PropertyField {
 
-    /**
-     * Creates a new {@link InstantPropertyField}.
-     */
-    public InstantPropertyField() {
-        super(Instant.class);
-    }
+  /**
+   * Creates a new {@link InstantPropertyField}.
+   */
+  public InstantPropertyField() {
+    super(Instant.class);
+  }
 
-    /**
-     * Parses a {@link String} into an {@link Instant}.
-     * @param value The {@link String} to parse.
-     * @return The parsed {@link Instant}.
-     */
-    @Override
-    public @NotNull Object parseString(@NotNull final String value) {
-        return (Instant.parse(value));
-    }
+  /**
+   * Parses a {@link String} into an {@link Instant}.
+   *
+   * @param value The {@link String} to parse.
+   * @return The parsed {@link Instant}.
+   */
+  @Override
+  public @NotNull Object parseString(@NotNull final String value) {
+    return (Instant.parse(value));
+  }
 
 }

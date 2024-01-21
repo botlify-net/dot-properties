@@ -12,26 +12,27 @@ import java.util.Date;
  */
 public class DatePropertyField extends PropertyField {
 
-    /**
-     * Creates a new date property field.
-     */
-    public DatePropertyField() {
-        super(Date.class);
-    }
+  /**
+   * Creates a new date property field.
+   */
+  public DatePropertyField() {
+    super(Date.class);
+  }
 
-    /**
-     * Parses a string into a date.
-     * @param value The string to parse.
-     * @return The parsed date.
-     */
-    @Override
-    public @NotNull Object parseString(@NotNull final String value) {
-        final SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-        try {
-            return (format.parse(value));
-        } catch (ParseException e) {
-            throw (new RuntimeException(e));
-        }
+  /**
+   * Parses a string into a date.
+   *
+   * @param value The string to parse.
+   * @return The parsed date.
+   */
+  @Override
+  public @NotNull Object parseString(@NotNull final String value) {
+    final SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+    try {
+      return (format.parse(value));
+    } catch (ParseException e) {
+      throw (new RuntimeException(e));
     }
+  }
 
 }

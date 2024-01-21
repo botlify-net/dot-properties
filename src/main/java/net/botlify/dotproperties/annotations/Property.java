@@ -16,22 +16,25 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 public @interface Property {
 
-    /**
-     * The name of the property to found in the file.
-     * @return The name of the property.
-     */
-    @NotNull String name();
+  /**
+   * The name of the property to found in the file.
+   *
+   * @return The name of the property.
+   */
+  @NotNull String name();
 
-    /**
-     * The regex to used to check the format of the property.
-     * @return The regex.
-     */
-    @NotNull String[] regex() default {};
+  /**
+   * The regex to use to check the format of the property.
+   *
+   * @return The regex.
+   */
+  @NotNull String[] regex() default {};
 
-    /**
-     * Set if the property is required of not.
-     * @return A boolean to known if the property is required.
-     */
-    boolean required() default false;
+  /**
+   * Set if the property is required of not.
+   *
+   * @return A boolean to known if the property is required.
+   */
+  boolean required() default false;
 
 }
